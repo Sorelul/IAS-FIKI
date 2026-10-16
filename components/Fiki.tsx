@@ -44,7 +44,11 @@ function Team() {
             <div className="chamfer relative aspect-[4/3] bg-slate">
               {m.photo ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={m.photo} alt={m.name} className="h-full w-full object-cover object-[center_30%]" />
+                <>
+                  <img src={m.photo} alt={m.name} className="h-full w-full object-cover object-[center_30%] saturate-[0.8]" />
+                  {/* Shared tone so photos shot in different light read as one set */}
+                  <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(139,124,255,0.14),rgba(12,18,34,0.4))]" aria-hidden />
+                </>
               ) : (
                 <span className="absolute bottom-2 left-3 font-display text-4xl sm:bottom-3 sm:left-4 sm:text-6xl font-bold text-violet/80">{m.initials}</span>
               )}
