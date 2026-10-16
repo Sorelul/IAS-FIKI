@@ -44,7 +44,7 @@ function Team() {
             <div className="chamfer relative aspect-[4/3] bg-slate">
               {m.photo ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={m.photo} alt={m.name} className="h-full w-full object-cover" />
+                <img src={m.photo} alt={m.name} className="h-full w-full object-cover object-[center_30%]" />
               ) : (
                 <span className="absolute bottom-2 left-3 font-display text-4xl sm:bottom-3 sm:left-4 sm:text-6xl font-bold text-violet/80">{m.initials}</span>
               )}
@@ -55,7 +55,7 @@ function Team() {
             <h3 className="mt-4 font-display text-lg font-semibold sm:text-xl">{m.name}</h3>
             <p className="text-sm font-medium text-violet">{m.role}</p>
             <p className="mt-2 text-[0.95rem] text-fog">{m.focus}</p>
-            <a href={`mailto:${m.email}`} className="mt-3 block truncate text-sm text-paper/80 underline decoration-rule underline-offset-4 hover:decoration-violet">
+            <a href={`mailto:${m.email}`} className="mt-3 block text-xs break-all text-paper/80 sm:text-sm underline decoration-rule underline-offset-4 hover:decoration-violet">
               {m.email}
             </a>
           </article>

@@ -51,11 +51,13 @@ const team = (roles: Record<string, [string, string]>): Member[] => [
     role: roles.sorin[0],
     focus: roles.sorin[1],
     owner: true,
+    photo: "/team/sorin.jpg",
   },
   {
     name: "Cristian Tiuț",
     initials: "CT",
     email: "cristian.tiut@stud.acs.upb.ro",
+    photo: "/team/cristian.jpg",
     role: roles.cristian[0],
     focus: roles.cristian[1],
   },
