@@ -15,8 +15,8 @@ function Slider(props: {
   return (
     <label className="block">
       <div className="flex items-baseline justify-between gap-4 text-sm">
-        <span className="text-muted">{props.label}</span>
-        <span className="font-mono text-fg">{props.display}</span>
+        <span className="text-fog">{props.label}</span>
+        <span className="font-mono text-paper">{props.display}</span>
       </div>
       <input
         type="range"
@@ -44,28 +44,28 @@ export function LossCalculator() {
   const monthly = orders * (rate / 100) * shipping * 2;
 
   return (
-    <div className="card relative overflow-hidden p-6 sm:p-8">
-      <p className="font-mono text-xs tracking-[0.2em] text-cyan uppercase">{c.title}</p>
+    <div className="chamfer bg-slate p-6 sm:p-8">
+      <h3 className="font-display text-xl font-semibold">{c.title}</h3>
       <div className="mt-6 space-y-6">
         <Slider label={c.orders} value={orders} min={50} max={3000} step={50} display={fmt.format(orders)} onChange={setOrders} />
         <Slider label={c.rate} value={rate} min={1} max={15} step={0.5} display={`${rate}%`} onChange={setRate} />
         <Slider label={c.shipping} value={shipping} min={10} max={40} step={1} display={`${shipping} ${currency}`} onChange={setShipping} />
       </div>
-      <div className="mt-8 grid grid-cols-2 gap-4 border-t border-line pt-6">
+      <div className="mt-8 grid grid-cols-2 gap-4 border-t border-rule pt-6">
         <div>
-          <p className="font-mono text-2xl text-fg sm:text-3xl">
-            {fmt.format(monthly)} <span className="text-base text-muted">{currency}</span>
+          <p className="font-display text-3xl font-bold sm:text-4xl">
+            {fmt.format(monthly)} <span className="text-base font-medium text-fog">{currency}</span>
           </p>
-          <p className="mt-1 text-sm text-muted">{c.perMonth}</p>
+          <p className="mt-1 text-sm text-fog">{c.perMonth}</p>
         </div>
         <div>
-          <p className="font-mono text-2xl text-rose sm:text-3xl">
-            {fmt.format(monthly * 12)} <span className="text-base text-muted">{currency}</span>
+          <p className="font-display text-3xl font-bold text-refused sm:text-4xl">
+            {fmt.format(monthly * 12)} <span className="text-base font-medium text-fog">{currency}</span>
           </p>
-          <p className="mt-1 text-sm text-muted">{c.perYear}</p>
+          <p className="mt-1 text-sm text-fog">{c.perYear}</p>
         </div>
       </div>
-      <p className="mt-6 text-xs leading-relaxed text-muted">{c.note}</p>
+      <p className="mt-6 text-sm text-fog">{c.note}</p>
     </div>
   );
 }

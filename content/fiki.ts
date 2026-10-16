@@ -28,6 +28,19 @@ export type Competitor = {
   url?: string;
 };
 
+export type Tier = "low" | "mid" | "high";
+
+export type ScanOrder = {
+  id: string;
+  name: string;
+  city: string;
+  amount: number;
+  signals: string[];
+  risk: number;
+  tier: Tier;
+  action: string;
+};
+
 export type Source = { label: string; url: string };
 
 const team = (roles: Record<string, [string, string]>): Member[] => [
@@ -133,26 +146,29 @@ const ro = {
     ["milestones", "Milestones"],
   ] as [string, string][],
   hero: {
-    badge: "M1 · Descriere proiect",
+    badge: "Milestone 1: descrierea proiectului",
     title: "RamburShield",
     tagline: "Afli dinainte care colete se întorc.",
     lead: "Lucrăm cu magazine online și dăm peste aceeași problemă la aproape toate: coletele ramburs refuzate la ușă. Cu RamburShield, fiecare comandă ramburs primește un scor de risc, iar magazinul află dacă merită să ceară avans. Clienții buni comandă ca până acum, doar comenzile dubioase au un pas în plus.",
     ctaPrimary: "De unde am pornit",
     ctaSecondary: "Cum funcționează",
-    terminal: {
-      title: "rambur-shield · live scoring",
-      lines: [
-        ["order", "#10482 · ramburs · 349 lei"],
-        ["signals", "telefon nou · 2 refuzuri în rețea · adresă incompletă"],
-        ["risk", "0.82"],
-        ["action", "cere avans 20% (70 lei)"],
-      ] as [string, string][],
-      level: "RISC RIDICAT",
-      ok: "#10483 · risc 0.07 · ramburs permis",
+    scanner: {
+      title: "Comanda",
+      scan: "Scanează altă comandă",
+      scanning: "Se scanează…",
+      note: "Comenzi de test, cu date inventate.",
+      fields: { to: "Destinatar", cod: "Ramburs", signals: "Semnale", risk: "Scor de risc", action: "Recomandare" },
+      currency: "lei",
+      stamps: { low: "Ramburs OK", mid: "Confirmă", high: "Cere avans" },
+      orders: [
+        { id: "10482", name: "Mihai P.", city: "Ploiești", amount: 349, signals: ["telefon nou", "2 refuzuri în rețea", "adresă incompletă"], risk: 0.82, tier: "high", action: "Cere avans de 70 lei" },
+        { id: "10483", name: "Andreea M.", city: "Cluj-Napoca", amount: 189, signals: ["6 livrări reușite", "telefon verificat"], risk: 0.06, tier: "low", action: "Trimite cu ramburs" },
+        { id: "10484", name: "Ioana D.", city: "Iași", amount: 520, signals: ["prima comandă", "valoare peste medie", "plasată la 03:12"], risk: 0.41, tier: "mid", action: "Confirmă prin SMS" },
+        { id: "10485", name: "Radu S.", city: "Brașov", amount: 95, signals: ["livrare reușită luna trecută"], risk: 0.11, tier: "low", action: "Trimite cu ramburs" },
+      ] as ScanOrder[],
     },
   },
   team: {
-    kicker: "01 · Echipa",
     title: "Cine suntem",
     lead: "Suntem patru colegi de master. Unul dintre noi lucrează într-o agenție care face magazine online, așa că putem vorbi direct cu comercianții: le punem întrebări, testăm cu ei și, dacă iese bine, le vindem tot noi.",
     ownerLabel: "Owner",
@@ -164,7 +180,6 @@ const ro = {
     }),
   },
   problem: {
-    kicker: "02 · Problema",
     title: "Un colet refuzat îl plătești de trei ori",
     lead: "Clientul comandă cu plata la livrare, curierul ajunge la ușă, iar clientul s-a răzgândit. Magazinul plătise deja transportul până la el, acum îl plătește și pe cel înapoi, iar marfa stă pe drum zile întregi în loc să fie vândută altcuiva. Un magazin cu câteva sute de comenzi pe lună pierde așa mii de lei pe an. Și de cele mai multe ori nimeni nu ține socoteala, pentru că pierderea se amestecă printre facturile de curierat.",
     losses: [
@@ -183,7 +198,6 @@ const ro = {
     },
   },
   size: {
-    kicker: "03 · Cât de mare e",
     title: "Și nu e problema unui singur magazin",
     stats: [
       ["31%", "dintre cumpărătorii români aleg rambursul. E cea mai folosită metodă de plată."],
@@ -192,7 +206,6 @@ const ro = {
     ] as [string, string][],
   },
   solution: {
-    kicker: "04 · Soluția",
     title: "Pasul în plus apare doar unde e risc",
     lead: "Azi, un magazin are două variante. Fie acceptă rambursul pentru toată lumea și înghite refuzurile, fie îl scoate și pierde clienții care vor să plătească la ușă. Noi vrem să-i dăm o a treia: un scor pentru fiecare comandă și o recomandare clară despre ce să facă cu ea.",
     tiers: [
@@ -210,7 +223,6 @@ const ro = {
     ] as [string, string][],
   },
   market: {
-    kicker: "05 · Segmente de clienți",
     title: "Pentru cine facem asta",
     segments: [
       ["Țintă principală", "Magazine online mici și medii din România", "Între 100 și 3.000 de comenzi pe lună, unde rambursul e o bucată mare din vânzări: fashion, cosmetice, electronice, casă."],
@@ -219,7 +231,6 @@ const ro = {
     ] as [string, string, string][],
   },
   competition: {
-    kicker: "06 · Competiția",
     title: "Ce fac magazinele azi",
     headers: ["Alternativă", "Cum funcționează", "De ce nu ajunge"],
     items: [
@@ -232,7 +243,6 @@ const ro = {
     ] as Competitor[],
   },
   advantage: {
-    kicker: "07 · Avantajul nostru",
     title: "Nu e doar un feature. E o rețea.",
     quote: "Cine refuză la un magazin e semnalat la toate. Cu cât sunt mai multe magazine, cu atât scorul e mai bun.",
     points: [
@@ -243,7 +253,6 @@ const ro = {
     ] as [string, string][],
   },
   metrics: {
-    kicker: "08 · Key metrics",
     title: "Cum ne dăm seama că merge",
     groups: [
       ["Pentru magazin", ["Cu cât scade rata de refuz", "Câți lei economisește pe lună", "La câte comenzi am adăugat un pas în plus"]],
@@ -252,7 +261,6 @@ const ro = {
     ] as [string, string[]][],
   },
   costs: {
-    kicker: "09 · Structura de costuri",
     title: "Pe ce se duc banii",
     items: [
       ["Dezvoltare", "plugin-uri, API, dashboard, modelul de scor"],
@@ -263,7 +271,6 @@ const ro = {
     ] as [string, string][],
   },
   revenue: {
-    kicker: "10 · Venituri",
     title: "Cum vrem să facem bani",
     draft: "Prețurile de mai jos sunt o primă estimare de-a noastră. Le punem la încercare în interviurile de la M2.",
     plans: [
@@ -278,7 +285,7 @@ const ro = {
     ],
   },
   validation: {
-    kicker: "Următorul pas · M2",
+    badge: "Următorul pas: M2",
     title: "Vorbim cu comercianții",
     lead: "Mergem la magazinele din portofoliul agenției cu trei întrebări: își știu rata de refuz? Cât îi costă? Ar cere avans pe comenzile riscante? Răspunsurile apar aici după interviuri.",
     targets: [
@@ -289,7 +296,6 @@ const ro = {
     pending: "În lucru",
   },
   milestones: {
-    kicker: "Roadmap",
     title: "Milestones",
     items: milestonesRo,
     labels: { done: "Gata", current: "Acum", upcoming: "Urmează" },
@@ -317,26 +323,29 @@ const en: Content = {
     ["milestones", "Milestones"],
   ],
   hero: {
-    badge: "M1 · Project description",
+    badge: "Milestone 1: project description",
     title: "RamburShield",
     tagline: "Know which parcels will come back.",
     lead: "We work with online stores, and almost all of them have the same problem: cash-on-delivery parcels refused at the door. With RamburShield, every COD order gets a risk score, and the store learns when it's worth asking for a deposit. Good customers order like they always have, and only the suspicious orders get one extra step.",
     ctaPrimary: "Where we started",
     ctaSecondary: "How it works",
-    terminal: {
-      title: "rambur-shield · live scoring",
-      lines: [
-        ["order", "#10482 · COD · 349 RON"],
-        ["signals", "new phone · 2 refusals in network · incomplete address"],
-        ["risk", "0.82"],
-        ["action", "request 20% deposit (70 RON)"],
+    scanner: {
+      title: "Order",
+      scan: "Scan another order",
+      scanning: "Scanning…",
+      note: "Test orders with made-up data.",
+      fields: { to: "Recipient", cod: "Cash on delivery", signals: "Signals", risk: "Risk score", action: "Recommendation" },
+      currency: "RON",
+      stamps: { low: "COD OK", mid: "Confirm", high: "Ask deposit" },
+      orders: [
+        { id: "10482", name: "Mihai P.", city: "Ploiești", amount: 349, signals: ["new phone", "2 refusals in network", "incomplete address"], risk: 0.82, tier: "high", action: "Ask for a 70 RON deposit" },
+        { id: "10483", name: "Andreea M.", city: "Cluj-Napoca", amount: 189, signals: ["6 successful deliveries", "verified phone"], risk: 0.06, tier: "low", action: "Ship with COD" },
+        { id: "10484", name: "Ioana D.", city: "Iași", amount: 520, signals: ["first order", "above-average value", "placed at 03:12"], risk: 0.41, tier: "mid", action: "Confirm by SMS" },
+        { id: "10485", name: "Radu S.", city: "Brașov", amount: 95, signals: ["delivered fine last month"], risk: 0.11, tier: "low", action: "Ship with COD" },
       ],
-      level: "HIGH RISK",
-      ok: "#10483 · risk 0.07 · COD allowed",
     },
   },
   team: {
-    kicker: "01 · Team",
     title: "Who we are",
     lead: "We're four master's students. One of us works at an agency that builds online stores, so we can talk to merchants directly: ask them questions, test with them and, if it works out, sell to them ourselves.",
     ownerLabel: "Owner",
@@ -348,7 +357,6 @@ const en: Content = {
     }),
   },
   problem: {
-    kicker: "02 · Problem",
     title: "You pay for a refused parcel three times",
     lead: "A customer orders with cash on delivery, the courier shows up, and they've changed their mind. The store already paid to ship it out, now pays to ship it back, and the stock sits in transit for days instead of being sold to someone else. A store with a few hundred orders a month loses thousands of RON a year this way. Most of the time nobody keeps track, because the loss gets buried in the courier invoices.",
     losses: [
@@ -367,7 +375,6 @@ const en: Content = {
     },
   },
   size: {
-    kicker: "03 · How big it is",
     title: "And it's not one store's problem",
     stats: [
       ["31%", "of Romanian shoppers choose cash on delivery. It's the most used payment method."],
@@ -376,7 +383,6 @@ const en: Content = {
     ],
   },
   solution: {
-    kicker: "04 · Solution",
     title: "The extra step only shows up where there's risk",
     lead: "Today a store has two options. Accept COD for everyone and swallow the refusals, or drop it and lose the customers who want to pay at the door. We want to give it a third one: a score for every order and a clear recommendation on what to do with it.",
     tiers: [
@@ -394,7 +400,6 @@ const en: Content = {
     ],
   },
   market: {
-    kicker: "05 · Customer segments",
     title: "Who we're building this for",
     segments: [
       ["Main target", "Small and mid-size Romanian online stores", "Between 100 and 3,000 orders a month, where COD is a big share of sales: fashion, cosmetics, electronics, home."],
@@ -403,7 +408,6 @@ const en: Content = {
     ],
   },
   competition: {
-    kicker: "06 · Competition",
     title: "What stores do today",
     headers: ["Alternative", "How it works", "Why it's not enough"],
     items: [
@@ -416,7 +420,6 @@ const en: Content = {
     ],
   },
   advantage: {
-    kicker: "07 · Our advantage",
     title: "Not just a feature. A network.",
     quote: "Whoever refuses at one store gets flagged at all of them. The more stores join, the better the score gets.",
     points: [
@@ -427,7 +430,6 @@ const en: Content = {
     ],
   },
   metrics: {
-    kicker: "08 · Key metrics",
     title: "How we'll know it works",
     groups: [
       ["For the store", ["How much the refusal rate drops", "How many RON it saves per month", "How many orders got an extra step"]],
@@ -436,7 +438,6 @@ const en: Content = {
     ],
   },
   costs: {
-    kicker: "09 · Cost structure",
     title: "Where the money goes",
     items: [
       ["Development", "plugins, API, dashboard, the scoring model"],
@@ -447,7 +448,6 @@ const en: Content = {
     ],
   },
   revenue: {
-    kicker: "10 · Revenue streams",
     title: "How we plan to make money",
     draft: "The prices below are our first estimate. We'll put them to the test in the M2 interviews.",
     plans: [
@@ -462,7 +462,7 @@ const en: Content = {
     ],
   },
   validation: {
-    kicker: "Next step · M2",
+    badge: "Next step: M2",
     title: "Talking to merchants",
     lead: "We're going to the stores in the agency's portfolio with three questions: do they know their refusal rate? How much does it cost them? Would they ask for a deposit on risky orders? The answers go here after the interviews.",
     targets: [
@@ -473,7 +473,6 @@ const en: Content = {
     pending: "In progress",
   },
   milestones: {
-    kicker: "Roadmap",
     title: "Milestones",
     items: milestonesEn,
     labels: { done: "Done", current: "Now", upcoming: "Next" },

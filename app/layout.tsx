@@ -1,16 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { Chakra_Petch, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { LangProvider } from "@/components/LangProvider";
 import "./globals.css";
 
-const grotesk = Space_Grotesk({
-  variable: "--font-grotesk",
+const display = Chakra_Petch({
+  variable: "--font-display",
   subsets: ["latin", "latin-ext"],
+  weight: ["500", "600", "700"],
 });
 
-const jetbrains = JetBrains_Mono({
-  variable: "--font-jetbrains",
+const sans = IBM_Plex_Sans({
+  variable: "--font-plex",
   subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600"],
+});
+
+const mono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -19,13 +27,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#05070d",
+  themeColor: "#0c1222",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ro">
-      <body className={`${grotesk.variable} ${jetbrains.variable} antialiased`}>
+      <body className={`${display.variable} ${sans.variable} ${mono.variable} antialiased`}>
         <LangProvider>{children}</LangProvider>
       </body>
     </html>
