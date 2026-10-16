@@ -151,7 +151,7 @@ const ro = {
     badge: "Milestone 1: descrierea proiectului",
     title: "RamburShield",
     tagline: "Afli dinainte care colete se întorc.",
-    lead: "Lucrăm cu magazine online și dăm peste aceeași problemă la aproape toate: coletele ramburs refuzate la ușă. Cu RamburShield, fiecare comandă ramburs primește un scor de risc, iar magazinul află dacă merită să ceară avans. Clienții buni comandă ca până acum, doar comenzile dubioase au un pas în plus.",
+    lead: "Coletele ramburs refuzate la livrare sunt o pierdere constantă pentru magazinele online. RamburShield dă fiecărei comenzi ramburs un scor de risc și arată când merită cerut un avans. Clienții buni comandă ca până acum, doar comenzile riscante au un pas în plus.",
     ctaPrimary: "De unde am pornit",
     ctaSecondary: "Cum funcționează",
     scanner: {
@@ -172,10 +172,10 @@ const ro = {
   },
   team: {
     title: "Cine suntem",
-    lead: "Suntem patru colegi de master. Unul dintre noi lucrează într-o agenție care face magazine online, așa că putem vorbi direct cu comercianții: le punem întrebări, testăm cu ei și, dacă iese bine, le vindem tot noi.",
+    lead: "Avem experiență în dezvoltare e-commerce, date și business, plus relații directe cu magazine online din România.",
     ownerLabel: "Owner",
     members: team({
-      sorin: ["Team Lead · Tech", "Mă ocup de arhitectură, de integrarea cu WooCommerce și Shopify și de legătura cu agenția."],
+      sorin: ["Team Lead · Tech", "Mă ocup de arhitectură, de integrarea cu WooCommerce și Shopify și de relația cu partenerii."],
       cristian: ["Product & Customer Dev", "Vorbesc cu comercianții, țin roadmap-ul și am grijă ca produsul să fie ușor de folosit."],
       eduard: ["Data & Risk Scoring", "Construiesc modelul de scor: ce semnale contează și cât de bine prezice refuzurile."],
       alexandru: ["Growth & Business", "Lucrez la pricing, la partea de GDPR și parteneriate și la pitch."],
@@ -228,7 +228,7 @@ const ro = {
     title: "Pentru cine facem asta",
     segments: [
       ["Țintă principală", "Magazine online mici și medii din România", "Între 100 și 3.000 de comenzi pe lună, unde rambursul e o bucată mare din vânzări: fashion, cosmetice, electronice, casă."],
-      ["Primii pe care îi întrebăm", "Clienții agenției", "Magazine WooCommerce și Shopify cu care lucrăm deja. Aici validăm ideea și tot aici vrem să vindem primele abonamente."],
+      ["Early adopters", "Magazine din rețeaua noastră", "Magazine WooCommerce și Shopify cu care avem deja relații. Aici validăm ideea și vindem primele abonamente."],
       ["Mai târziu", "Platforme și agenții de e-commerce", "Gomag, MerchantPro sau alte agenții ar putea pune scorul direct în platforma lor."],
     ] as [string, string, string][],
   },
@@ -251,7 +251,7 @@ const ro = {
       ["Rețeaua crește odată cu noi", "Fiecare magazin care intră aduce date care îi protejează și pe ceilalți. Cine vine după noi pornește de la zero."],
       ["GDPR din prima zi", "Nu publicăm liste de nume. Identificatorii sunt pseudonimizați, magazinele văd doar un scor, iar interesul legitim îl documentăm într-un DPIA. Am învățat din greșelile listelor publice."],
       ["Nu blocăm pe nimeni", "Recomandăm cel mai mic pas care scade riscul. Clientul bun nu simte nimic, deci conversia nu scade."],
-      ["Avem deja acces la clienți", "Prin agenție vorbim direct cu magazinele. Nu trebuie să cumpărăm trafic ca să validăm sau să vindem."],
+      ["Acces direct la piață", "Avem relații existente cu magazine online, deci putem valida și vinde fără să cumpărăm trafic."],
     ] as [string, string][],
   },
   metrics: {
@@ -269,7 +269,7 @@ const ro = {
       ["Infrastructură", "hosting, bază de date, procesare"],
       ["GDPR", "consultanță juridică, DPIA, contracte de procesare"],
       ["Notificări", "SMS-uri și WhatsApp pentru confirmări, refacturate"],
-      ["Vânzări", "onboarding prin agenție, suport, materiale"],
+      ["Vânzări", "onboarding, suport, materiale"],
     ] as [string, string][],
   },
   revenue: {
@@ -289,7 +289,7 @@ const ro = {
   validation: {
     badge: "Următorul pas: M2",
     title: "Vorbim cu comercianții",
-    lead: "Mergem la magazinele din portofoliul agenției cu trei întrebări: își știu rata de refuz? Cât îi costă? Ar cere avans pe comenzile riscante? Răspunsurile apar aici după interviuri.",
+    lead: "Mergem la magazinele din rețeaua noastră cu trei întrebări: își știu rata de refuz? Cât îi costă? Ar cere avans pe comenzile riscante? Răspunsurile apar aici după interviuri.",
     targets: [
       ["—", "comercianți intervievați"],
       ["—", "își știau rata de refuz"],
@@ -328,7 +328,7 @@ const en: Content = {
     badge: "Milestone 1: project description",
     title: "RamburShield",
     tagline: "Know which parcels will come back.",
-    lead: "We work with online stores, and almost all of them have the same problem: cash-on-delivery parcels refused at the door. With RamburShield, every COD order gets a risk score, and the store learns when it's worth asking for a deposit. Good customers order like they always have, and only the suspicious orders get one extra step.",
+    lead: "Cash-on-delivery parcels refused at the door are a constant loss for online stores. RamburShield gives every COD order a risk score and shows when a deposit is worth asking for. Good customers order as usual, and only risky orders get one extra step.",
     ctaPrimary: "Where we started",
     ctaSecondary: "How it works",
     scanner: {
@@ -349,10 +349,10 @@ const en: Content = {
   },
   team: {
     title: "Who we are",
-    lead: "We're four master's students. One of us works at an agency that builds online stores, so we can talk to merchants directly: ask them questions, test with them and, if it works out, sell to them ourselves.",
+    lead: "We bring experience in e-commerce development, data and business, plus direct connections with online stores in Romania.",
     ownerLabel: "Owner",
     members: team({
-      sorin: ["Team Lead · Tech", "I handle the architecture, the WooCommerce and Shopify integration and the link with the agency."],
+      sorin: ["Team Lead · Tech", "I handle the architecture, the WooCommerce and Shopify integration and our partner relationships."],
       cristian: ["Product & Customer Dev", "I talk to merchants, keep the roadmap and make sure the product is easy to use."],
       eduard: ["Data & Risk Scoring", "I build the scoring model: which signals matter and how well it predicts refusals."],
       alexandru: ["Growth & Business", "I work on pricing, GDPR and partnerships, and on the pitch."],
@@ -405,7 +405,7 @@ const en: Content = {
     title: "Who we're building this for",
     segments: [
       ["Main target", "Small and mid-size Romanian online stores", "Between 100 and 3,000 orders a month, where COD is a big share of sales: fashion, cosmetics, electronics, home."],
-      ["The first we'll ask", "The agency's clients", "WooCommerce and Shopify stores we already work with. This is where we validate the idea and where we want to sell the first subscriptions."],
+      ["Early adopters", "Stores in our network", "WooCommerce and Shopify stores we already have relationships with. This is where we validate the idea and sell the first subscriptions."],
       ["Later on", "E-commerce platforms and agencies", "Gomag, MerchantPro or other agencies could plug the score straight into their platform."],
     ],
   },
@@ -428,7 +428,7 @@ const en: Content = {
       ["The network grows with us", "Every store that joins brings data that protects the others too. Whoever comes after us starts from zero."],
       ["GDPR from day one", "We don't publish lists of names. Identifiers are pseudonymised, stores only see a score, and we document the legitimate interest in a DPIA. We learned from the public lists' mistakes."],
       ["We don't block anyone", "We recommend the smallest step that lowers the risk. Good customers don't notice, so conversion holds."],
-      ["We already reach customers", "Through the agency we talk to stores directly. We don't need to buy traffic to validate or to sell."],
+      ["Direct market access", "We have existing relationships with online stores, so we can validate and sell without buying traffic."],
     ],
   },
   metrics: {
@@ -446,7 +446,7 @@ const en: Content = {
       ["Infrastructure", "hosting, database, processing"],
       ["GDPR", "legal advice, DPIA, data processing agreements"],
       ["Notifications", "SMS and WhatsApp for confirmations, billed through"],
-      ["Sales", "onboarding through the agency, support, materials"],
+      ["Sales", "onboarding, support, materials"],
     ],
   },
   revenue: {
@@ -466,7 +466,7 @@ const en: Content = {
   validation: {
     badge: "Next step: M2",
     title: "Talking to merchants",
-    lead: "We're going to the stores in the agency's portfolio with three questions: do they know their refusal rate? How much does it cost them? Would they ask for a deposit on risky orders? The answers go here after the interviews.",
+    lead: "We're going to the stores in our network with three questions: do they know their refusal rate? How much does it cost them? Would they ask for a deposit on risky orders? The answers go here after the interviews.",
     targets: [
       ["—", "merchants interviewed"],
       ["—", "knew their refusal rate"],
