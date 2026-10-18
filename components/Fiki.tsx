@@ -45,7 +45,7 @@ function Team() {
               {m.photo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <>
-                  <img src={m.photo} alt={m.name} className="h-full w-full object-cover object-[center_30%] saturate-[0.8]" />
+                  <img src={m.photo} alt={m.name} className="h-full w-full object-cover object-[center_30%]" />
                   {/* Shared tone so photos shot in different light read as one set */}
                   <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(139,124,255,0.14),rgba(12,18,34,0.4))]" aria-hidden />
                 </>

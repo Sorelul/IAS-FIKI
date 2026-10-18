@@ -54,7 +54,7 @@ const team = (roles: Record<string, [string, string]>): Member[] => [
     photo: "/team/sorin.jpg",
   },
   {
-    name: "Cristian Tiuț",
+    name: "Cristian Tiut",
     initials: "CT",
     email: "cristian.tiut@stud.acs.upb.ro",
     photo: "/team/cristian.jpg",
@@ -67,6 +67,7 @@ const team = (roles: Record<string, [string, string]>): Member[] => [
     email: "eduard.radu1303@stud.acs.upb.ro",
     role: roles.eduard[0],
     focus: roles.eduard[1],
+    photo: "/team/eduard.jpg",
   },
   {
     name: "Alexandru Ioniță",
@@ -74,6 +75,7 @@ const team = (roles: Record<string, [string, string]>): Member[] => [
     email: "alexandru.ionita03@stud.acs.upb.ro",
     role: roles.alexandru[0],
     focus: roles.alexandru[1],
+    photo: "/team/alex.jpg",
   },
 ];
 
