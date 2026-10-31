@@ -1,6 +1,7 @@
 "use client";
 
-import { sources, type Milestone, type Tier } from "@/content/fiki";
+import { sources, type InterviewGroup, type Milestone, type Tier } from "@/content/fiki";
+import type { InterviewBreakdown, InterviewStats } from "@/lib/interviewStats";
 import { useLang } from "./LangProvider";
 import { LossCalculator } from "./LossCalculator";
 import { Nav } from "./Nav";
@@ -297,27 +298,80 @@ function Business() {
   );
 }
 
-function Validation() {
+function Breakdown({ group, data }: { group: InterviewGroup; data: InterviewBreakdown }) {
   const { t } = useLang();
-  const v = t.validation;
+  const answers = group.sorted ? [...data.answers].sort((a, b) => b.count - a.count) : data.answers;
   return (
-    <Section className="border-t border-rule">
-      <div className="rounded-sm border border-dashed border-caution/50 p-6 sm:p-10">
-        <div className="flex flex-wrap items-center gap-3 text-sm">
-          <span className="text-caution">{v.badge}</span>
-          <span className="rounded-sm bg-caution/15 px-2 py-0.5 text-caution">{v.pending}</span>
-        </div>
-        <h2 className="mt-3 font-display text-3xl font-semibold">{v.title}</h2>
-        <p className="mt-3 max-w-[40rem] text-fog">{v.lead}</p>
-        <dl className="mt-8 grid gap-6 sm:grid-cols-3">
-          {v.targets.map(([value, label]) => (
-            <div key={label}>
-              <dt className="font-display text-4xl text-fog/60">{value}</dt>
-              <dd className="mt-1 text-[0.95rem] text-fog">{label}</dd>
+    <div>
+      <h3 className="border-b border-rule pb-2 font-display text-lg font-semibold">{group.title}</h3>
+      {group.note && <p className="mt-2 text-sm text-fog">{group.note}</p>}
+      <ul className="mt-4 space-y-3">
+        {answers.map(({ label, count }) => (
+          <li key={label}>
+            <div className="flex items-baseline justify-between gap-4 text-[0.95rem]">
+              <span className="text-fog">{t.interviews.labels[label] ?? label}</span>
+              <span className="font-mono text-paper">{count}</span>
             </div>
-          ))}
-        </dl>
-      </div>
+            {/* Share of who answered this question, so multi-select bars stay comparable */}
+            <div className="mt-1 h-1.5" aria-hidden>
+              {count > 0 && <div className="h-full rounded-r bg-violet" style={{ width: `${(count / data.answered) * 100}%` }} />}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function Interviews({ stats }: { stats: InterviewStats | null }) {
+  const { t } = useLang();
+  const v = t.interviews;
+  const breakdowns = stats?.breakdowns;
+
+  const highlights = v.highlights.map(({ key, answers, label }) => {
+    const data = breakdowns?.[key];
+    if (!data) return { label, value: "—", total: null };
+    const value = data.answers.filter((a) => answers.includes(a.label)).reduce((sum, a) => sum + a.count, 0);
+    return { label, value: String(value), total: data.answered };
+  });
+
+  return (
+    <Section id="interviews" className="border-t border-rule">
+      <p className="mb-3 text-sm text-violet">{v.badge}</p>
+      <Heading title={v.title} lead={v.lead} />
+      <dl className="grid gap-8 md:grid-cols-3 md:gap-0">
+        <div className="border-l-2 border-violet/60 pl-5 md:pr-6">
+          <dt className="font-display text-4xl font-bold">{stats?.responses ?? "—"}</dt>
+          <dd className="mt-2 text-[0.95rem] text-fog">{v.responses}</dd>
+        </div>
+        {highlights.map(({ label, value, total }) => (
+          <div key={label} className="border-l-2 border-violet/60 pl-5 md:pr-6">
+            <dt className="font-display text-4xl font-bold">
+              {value}
+              {total !== null && (
+                <span className="text-base font-medium text-fog">
+                  {" "}
+                  {v.of} {total}
+                </span>
+              )}
+            </dt>
+            <dd className="mt-2 text-[0.95rem] text-fog">{label}</dd>
+          </div>
+        ))}
+      </dl>
+
+      {breakdowns ? (
+        <div className="mt-16 grid gap-x-12 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+          {v.groups.map((group) => {
+            const data = breakdowns[group.key];
+            return data ? <Breakdown key={group.key} group={group} data={data} /> : null;
+          })}
+        </div>
+      ) : (
+        <p className="mt-12 rounded-sm border border-dashed border-caution/50 p-5 text-[0.95rem] text-fog">
+          {stats ? v.pending.replace("{n}", String(stats.minResponses)) : v.unavailable}
+        </p>
+      )}
     </Section>
   );
 }
@@ -379,7 +433,7 @@ function Footer() {
   );
 }
 
-export function Fiki() {
+export function Fiki({ interviews }: { interviews: InterviewStats | null }) {
   return (
     <>
       <Nav />
@@ -392,7 +446,7 @@ export function Fiki() {
         <Competition />
         <Advantage />
         <Business />
-        <Validation />
+        <Interviews stats={interviews} />
         <Milestones />
       </main>
       <Footer />

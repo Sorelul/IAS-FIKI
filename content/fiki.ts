@@ -43,6 +43,10 @@ export type ScanOrder = {
 
 export type Source = { label: string; url: string };
 
+// `key` matches QUESTIONS in scripts/interview-stats.gs.
+export type InterviewGroup = { key: string; title: string; note?: string; sorted?: boolean };
+export type InterviewHighlight = { key: string; answers: string[]; label: string };
+
 const team = (roles: Record<string, [string, string]>): Member[] => [
   {
     name: "Cotuna Dumitru-Sorin",
@@ -147,6 +151,7 @@ const ro = {
     ["market", "Clienți"],
     ["competition", "Competiția"],
     ["business", "Business"],
+    ["interviews", "Interviuri"],
     ["milestones", "Milestones"],
   ] as [string, string][],
   hero: {
@@ -288,16 +293,27 @@ const ro = {
       "Platformele și agențiile pot lua varianta white-label",
     ],
   },
-  validation: {
-    badge: "Următorul pas: M2",
-    title: "Vorbim cu comercianții",
-    lead: "Mergem la magazinele din rețeaua noastră cu trei întrebări: își știu rata de refuz? Cât îi costă? Ar cere avans pe comenzile riscante? Răspunsurile apar aici după interviuri.",
-    targets: [
-      ["—", "comercianți intervievați"],
-      ["—", "își știau rata de refuz"],
-      ["—", "ar cere avans pe comenzile riscante"],
-    ] as [string, string][],
-    pending: "În lucru",
+  interviews: {
+    badge: "M2: validare cu clienți",
+    title: "Ce spun comercianții",
+    lead: "Întrebăm magazinele online cum stau cu refuzurile și dacă ar folosi un scor de risc. Cifrele vin direct din formularul de interviu și se actualizează singure. Răspunsurile sunt confidențiale, așa că arătăm doar totaluri, fără nume de firme.",
+    responses: "răspunsuri primite",
+    of: "din",
+    highlights: [
+      { key: "trial", answers: ["Da"], label: "ar testa gratuit 30 de zile, pe comenzi reale" },
+      { key: "contribute", answers: ["Da", "Da, cu condiții"], label: "ar contribui cu date anonimizate" },
+    ] as InterviewHighlight[],
+    pending: "Statisticile apar de la {n} răspunsuri în sus, ca să nu se poată deduce ce a spus cineva anume.",
+    unavailable: "Nu am putut încărca cifrele acum. Revin în câteva minute.",
+    groups: [
+      { key: "platform", title: "Pe ce platformă vând", sorted: true },
+      { key: "orders", title: "Comenzi pe lună" },
+      { key: "codShare", title: "Cât din comenzi sunt ramburs" },
+      { key: "reasons", title: "De ce refuză clienții", note: "Se pot alege mai multe motive.", sorted: true },
+      { key: "contribute", title: "Ar contribui cu date?" },
+      { key: "pay", title: "Cât ar plăti pe lună" },
+    ] as InterviewGroup[],
+    labels: {} as Record<string, string>,
   },
   milestones: {
     title: "Milestones",
@@ -324,6 +340,7 @@ const en: Content = {
     ["market", "Customers"],
     ["competition", "Competition"],
     ["business", "Business"],
+    ["interviews", "Interviews"],
     ["milestones", "Milestones"],
   ],
   hero: {
@@ -465,16 +482,49 @@ const en: Content = {
       "Platforms and agencies can take the white-label version",
     ],
   },
-  validation: {
-    badge: "Next step: M2",
-    title: "Talking to merchants",
-    lead: "We're going to the stores in our network with three questions: do they know their refusal rate? How much does it cost them? Would they ask for a deposit on risky orders? The answers go here after the interviews.",
-    targets: [
-      ["—", "merchants interviewed"],
-      ["—", "knew their refusal rate"],
-      ["—", "would ask for a deposit on risky orders"],
+  interviews: {
+    badge: "M2: customer validation",
+    title: "What merchants tell us",
+    lead: "We ask online stores how they deal with refusals and whether they'd use a risk score. The numbers come straight from the interview form and update on their own. Answers are confidential, so we only show totals, with no company names.",
+    responses: "responses so far",
+    of: "of",
+    highlights: [
+      { key: "trial", answers: ["Da"], label: "would try it free for 30 days on real orders" },
+      { key: "contribute", answers: ["Da", "Da, cu condiții"], label: "would contribute anonymised data" },
     ],
-    pending: "In progress",
+    pending: "The statistics appear from {n} responses up, so nobody's answers can be worked out.",
+    unavailable: "We couldn't load the numbers right now. Check back in a few minutes.",
+    groups: [
+      { key: "platform", title: "Which platform they sell on", sorted: true },
+      { key: "orders", title: "Orders per month" },
+      { key: "codShare", title: "Share of orders paid by COD" },
+      { key: "reasons", title: "Why customers refuse", note: "More than one reason can be picked.", sorted: true },
+      { key: "contribute", title: "Would they contribute data?" },
+      { key: "pay", title: "What they'd pay per month" },
+    ],
+    // Form answers arrive in Romanian, keyed by the option text.
+    labels: {
+      "Sub 100": "Under 100",
+      "500-2.000": "500-2,000",
+      "Peste 2.000": "Over 2,000",
+      "Sub 25%": "Under 25%",
+      "Peste 75%": "Over 75%",
+      "Clientul nu răspunde la telefon": "Customer doesn't answer the phone",
+      "S-a răzgândit": "Changed their mind",
+      "A comandat același produs din mai multe locuri": "Ordered the same product from several places",
+      "Comandă falsă": "Fake order",
+      "Adresă greșită": "Wrong address",
+      "Livrare întârziată": "Late delivery",
+      Da: "Yes",
+      "Da, cu condiții": "Yes, with conditions",
+      Nu: "No",
+      Nimic: "Nothing",
+      "Sub 50 lei": "Under 50 RON",
+      "50-150 lei": "50-150 RON",
+      "150-300 lei": "150-300 RON",
+      "Peste 300 lei": "Over 300 RON",
+      Altele: "Other",
+    },
   },
   milestones: {
     title: "Milestones",

@@ -5,6 +5,7 @@ Fiki-ul (one-pager) proiectului RamburShield pentru cursul Startup Engineering (
 - Next.js 15 (App Router) + Tailwind v4, RO/EN.
 - Tot conținutul e în `content/fiki.ts`. Pentru un milestone nou adaugi date acolo, nu în componente.
 - Poze echipă: pune fișierul în `public/team/` și setează `photo: "/team/nume.jpg"` pe membru.
+- Secțiunea de interviuri citește totalurile din formularul Google prin `scripts/interview-stats.gs` (Apps Script), la cel mult 5 minute. Nume de firme și texte libere nu ajung pe site.
 
 ```bash
 npm install
