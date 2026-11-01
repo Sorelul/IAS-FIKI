@@ -18,6 +18,7 @@ export type Milestone = {
   title: string;
   status: "done" | "current" | "upcoming";
   highlight?: string;
+  target?: string;
 };
 
 export type Competitor = {
@@ -119,20 +120,20 @@ const sources: Source[] = [
 ];
 
 const milestonesRo: Milestone[] = [
-  { id: "M0", week: "S2 · 05–09 oct", title: "Formare echipă", status: "done" },
-  { id: "M1", week: "S3 · termen 19.10", title: "Fiki & descriere proiect", status: "current" },
-  { id: "M2", week: "S5 · 26–30 oct", title: "Validare cu clienți", status: "upcoming" },
-  { id: "M3", week: "S7 · 09–13 nov", title: "—", status: "upcoming" },
-  { id: "M4", week: "S8 · 16–20 nov", title: "—", status: "upcoming" },
-  { id: "M5", week: "S10 · 03 dec", title: "—", status: "upcoming", highlight: "Prezentare progres" },
-  { id: "M6", week: "S11 · 07–11 dec", title: "—", status: "upcoming" },
-  { id: "M7–M9", week: "S13 · 14 ian", title: "—", status: "upcoming", highlight: "Prezentare proiect" },
-  { id: "M11", week: "S14 · 18–22 ian", title: "—", status: "upcoming" },
+  { id: "M0", week: "termen 14.10.26", title: "Formare echipă", status: "done", target: "top" },
+  { id: "M1", week: "termen 19.10.26", title: "Fiki & descriere proiect", status: "done", target: "top" },
+  { id: "M2", week: "termen 02.11.26", title: "Validare cu clienți", status: "current", target: "interviews" },
+  { id: "M3", week: "termen 09.11.26", title: "—", status: "upcoming" },
+  { id: "M4", week: "termen 16.11.26", title: "—", status: "upcoming" },
+  { id: "M5", week: "termen 02.12.26", title: "—", status: "upcoming", highlight: "Prezentare progres" },
+  { id: "M6", week: "termen 07.12.26", title: "—", status: "upcoming" },
+  { id: "M7–M9", week: "termen 11.01.27", title: "—", status: "upcoming", highlight: "Prezentare proiect" },
+  { id: "M11", week: "termen 18.01.27", title: "—", status: "upcoming" },
 ];
 
 const milestonesEn: Milestone[] = milestonesRo.map((m) => ({
   ...m,
-  week: m.week.replace("S", "W").replace("termen", "due").replace("oct", "Oct").replace("nov", "Nov").replace("dec", "Dec").replace("ian", "Jan"),
+  week: m.week.replace("termen", "due"),
   title:
     { M0: "Team forming", M1: "Fiki & project description", M2: "Customer validation" }[m.id] ?? m.title,
   highlight:
@@ -152,7 +153,6 @@ const ro = {
     ["competition", "Competiția"],
     ["business", "Business"],
     ["interviews", "Interviuri"],
-    ["milestones", "Milestones"],
   ] as [string, string][],
   hero: {
     badge: "Milestone 1: descrierea proiectului",
@@ -294,7 +294,7 @@ const ro = {
     ],
   },
   interviews: {
-    badge: "M2: validare cu clienți",
+    badge: "Milestone 2: validare cu clienți",
     title: "Ce spun comercianții",
     lead: "Întrebăm magazinele online cum stau cu refuzurile și dacă ar folosi un scor de risc. Cifrele vin direct din formularul de interviu și se actualizează singure. Răspunsurile sunt confidențiale, așa că arătăm doar totaluri, fără nume de firme.",
     responses: "răspunsuri primite",
@@ -319,6 +319,8 @@ const ro = {
     title: "Milestones",
     items: milestonesRo,
     labels: { done: "Gata", current: "Acum", upcoming: "Urmează" },
+    expand: "Deschide milestones",
+    collapse: "Închide milestones",
   },
   footer: {
     sources: "Surse",
@@ -341,7 +343,6 @@ const en: Content = {
     ["competition", "Competition"],
     ["business", "Business"],
     ["interviews", "Interviews"],
-    ["milestones", "Milestones"],
   ],
   hero: {
     badge: "Milestone 1: project description",
@@ -483,7 +484,7 @@ const en: Content = {
     ],
   },
   interviews: {
-    badge: "M2: customer validation",
+    badge: "Milestone 2: customer validation",
     title: "What merchants tell us",
     lead: "We ask online stores how they deal with refusals and whether they'd use a risk score. The numbers come straight from the interview form and update on their own. Answers are confidential, so we only show totals, with no company names.",
     responses: "responses so far",
@@ -530,6 +531,8 @@ const en: Content = {
     title: "Milestones",
     items: milestonesEn,
     labels: { done: "Done", current: "Now", upcoming: "Next" },
+    expand: "Open milestones",
+    collapse: "Close milestones",
   },
   footer: {
     sources: "Sources",

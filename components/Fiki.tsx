@@ -1,9 +1,10 @@
 "use client";
 
-import { sources, type InterviewGroup, type Milestone, type Tier } from "@/content/fiki";
+import { sources, type InterviewGroup, type Tier } from "@/content/fiki";
 import type { InterviewBreakdown, InterviewStats } from "@/lib/interviewStats";
 import { useLang } from "./LangProvider";
 import { LossCalculator } from "./LossCalculator";
+import { MilestonesSidebar } from "./MilestonesSidebar";
 import { Nav } from "./Nav";
 import { Scanner } from "./Scanner";
 import { Heading, Section, ShieldLogo, tierColor } from "./ui";
@@ -16,7 +17,7 @@ function Hero() {
       <Section className="grid items-center gap-12 pt-12 sm:pt-20 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
         <div>
           <span className="inline-block rounded-sm border border-violet/60 px-2.5 py-1 text-sm text-violet">{h.badge}</span>
-          <h1 className="mt-6 font-display text-[3.4rem] leading-[0.95] font-bold tracking-tight sm:text-[5.5rem]">{h.title}</h1>
+          <h1 className="mt-6 font-display text-[2.75rem] leading-[0.95] min-[400px]:text-[3.4rem] font-bold tracking-tight sm:text-[5.5rem]">{h.title}</h1>
           <p className="mt-5 font-display text-2xl leading-snug font-medium text-paper sm:text-[1.9rem]">{h.tagline}</p>
           <p className="mt-6 max-w-[36rem] text-pretty text-fog">{h.lead}</p>
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
@@ -337,7 +338,7 @@ function Interviews({ stats }: { stats: InterviewStats | null }) {
 
   return (
     <Section id="interviews" className="border-t border-rule">
-      <p className="mb-3 text-sm text-violet">{v.badge}</p>
+      <span className="mb-6 inline-block rounded-sm border border-violet/60 px-2.5 py-1 text-sm text-violet">{v.badge}</span>
       <Heading title={v.title} lead={v.lead} />
       <dl className="grid gap-8 md:grid-cols-3 md:gap-0">
         <div className="border-l-2 border-violet/60 pl-5 md:pr-6">
@@ -376,37 +377,6 @@ function Interviews({ stats }: { stats: InterviewStats | null }) {
   );
 }
 
-const milestoneBorder: Record<Milestone["status"], string> = {
-  done: "border-clear",
-  current: "border-violet",
-  upcoming: "border-rule",
-};
-
-function Milestones() {
-  const { t } = useLang();
-  const m = t.milestones;
-  return (
-    <Section id="milestones" className="border-t border-rule">
-      <Heading title={m.title} />
-      <ol className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-9 lg:gap-x-0">
-        {m.items.map((it) => (
-          <li key={it.id} className={`border-t-2 pt-3 lg:pr-3 ${milestoneBorder[it.status]} ${it.status === "upcoming" ? "text-fog" : ""}`}>
-            <div className="flex items-baseline justify-between gap-2">
-              <span className="font-display text-lg font-bold">{it.id}</span>
-              {it.status !== "upcoming" && (
-                <span className={`text-xs ${it.status === "done" ? "text-clear" : "text-violet"}`}>{m.labels[it.status]}</span>
-              )}
-            </div>
-            <p className="font-mono text-xs text-fog">{it.week}</p>
-            {it.title !== "—" && <p className="mt-2 text-sm leading-snug">{it.title}</p>}
-            {it.highlight && <p className="mt-2 text-sm text-caution">{it.highlight}</p>}
-          </li>
-        ))}
-      </ol>
-    </Section>
-  );
-}
-
 function Footer() {
   const { t } = useLang();
   return (
@@ -437,19 +407,22 @@ export function Fiki({ interviews }: { interviews: InterviewStats | null }) {
   return (
     <>
       <Nav />
-      <main>
-        <Hero />
-        <Team />
-        <Problem />
-        <Solution />
-        <Market />
-        <Competition />
-        <Advantage />
-        <Business />
-        <Interviews stats={interviews} />
-        <Milestones />
-      </main>
-      <Footer />
+      <MilestonesSidebar />
+      {/* Room for the collapsed milestones rail */}
+      <div className="pl-14">
+        <main>
+          <Hero />
+          <Team />
+          <Problem />
+          <Solution />
+          <Market />
+          <Competition />
+          <Advantage />
+          <Business />
+          <Interviews stats={interviews} />
+        </main>
+        <Footer />
+      </div>
     </>
   );
 }
