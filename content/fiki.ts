@@ -303,7 +303,7 @@ const ro = {
     responses: "răspunsuri primite",
     of: "din",
     highlights: [
-      { key: "trial", answers: ["Da"], label: "ar testa gratuit 30 de zile, pe comenzi reale" },
+      { key: "trial", answers: ["Da"], label: "ar încerca varianta beta" },
       { key: "contribute", answers: ["Da", "Da, cu condiții"], label: "ar contribui cu date anonimizate" },
     ] as InterviewHighlight[],
     pending: "Statisticile apar de la {n} răspunsuri în sus, ca să nu se poată deduce ce a spus cineva anume.",
@@ -496,7 +496,7 @@ const en: Content = {
     responses: "responses so far",
     of: "of",
     highlights: [
-      { key: "trial", answers: ["Da"], label: "would try it free for 30 days on real orders" },
+      { key: "trial", answers: ["Da"], label: "would try the beta version" },
       { key: "contribute", answers: ["Da", "Da, cu condiții"], label: "would contribute anonymised data" },
     ],
     pending: "The statistics appear from {n} responses up, so nobody's answers can be worked out.",
