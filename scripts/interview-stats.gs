@@ -16,8 +16,8 @@ const QUESTIONS = {
   orders: "Comenzi pe lună",
   codShare: "Ce procent din comenzi sunt cu plata ramburs?",
   reasons: "Care sunt cele mai frecvente motive de refuz?",
-  contribute: "Ați contribui cu date anonimizate (telefon criptat + rezultatul livrării) în schimbul accesului la scorurile din toată rețeaua?",
-  trial: "Ați testa gratuit 30 de zile pe comenzile reale?",
+  contribute: "Ne puteți trimite, pentru test, un extras anonimizat din istoricul dumneavoastră de livrări, ca să vedem cât de precis ar fi scorul pentru magazinul dumneavoastră?",
+  trial: "Doriți acces la versiunea beta?",
   pay: "Cât ați plăti lunar pentru un astfel de serviciu?",
 };
 

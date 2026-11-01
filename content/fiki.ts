@@ -297,6 +297,9 @@ const ro = {
     badge: "Milestone 2: validare cu clienți",
     title: "Ce spun comercianții",
     lead: "Întrebăm magazinele online cum stau cu refuzurile și dacă ar folosi un scor de risc. Cifrele vin direct din formularul de interviu și se actualizează singure. Răspunsurile sunt confidențiale, așa că arătăm doar totaluri, fără nume de firme.",
+    method:
+      "Formularul e construit după regulile din The Mom Test. Comercianții nu ne evaluează ideea, ci răspund doar la întrebări despre situații concrete prin care au trecut deja: ultima comandă refuzată, cât i-a costat, ce au făcut atunci. Așa vedem dacă problema e atât de reală cât credem, iar dacă nu e, aflăm încotro ar avea sens să pivotăm.",
+    formLabel: "Vezi formularul",
     responses: "răspunsuri primite",
     of: "din",
     highlights: [
@@ -487,6 +490,9 @@ const en: Content = {
     badge: "Milestone 2: customer validation",
     title: "What merchants tell us",
     lead: "We ask online stores how they deal with refusals and whether they'd use a risk score. The numbers come straight from the interview form and update on their own. Answers are confidential, so we only show totals, with no company names.",
+    method:
+      "We built the form around The Mom Test. Store owners never rate our idea. They only answer questions about concrete things that already happened: their last refused order, what it cost them, what they did about it. That tells us whether the problem is as real as we think, and if it isn't, where a pivot might make sense.",
+    formLabel: "See the form",
     responses: "responses so far",
     of: "of",
     highlights: [
@@ -541,4 +547,5 @@ const en: Content = {
 };
 
 export const content: Record<Lang, Content> = { ro, en };
+export const interviewFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLScRVm5ZNhzPai3UP39MYGBt1KAZNSUnT6lhV7I0SqpKuFXy6Q/viewform?usp=dialog";
 export { sources };

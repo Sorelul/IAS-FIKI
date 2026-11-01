@@ -1,6 +1,6 @@
 "use client";
 
-import { sources, type InterviewGroup, type Tier } from "@/content/fiki";
+import { interviewFormUrl, sources, type InterviewGroup, type Tier } from "@/content/fiki";
 import type { InterviewBreakdown, InterviewStats } from "@/lib/interviewStats";
 import { useLang } from "./LangProvider";
 import { LossCalculator } from "./LossCalculator";
@@ -340,6 +340,15 @@ function Interviews({ stats }: { stats: InterviewStats | null }) {
     <Section id="interviews" className="border-t border-rule">
       <span className="mb-6 inline-block rounded-sm border border-violet/60 px-2.5 py-1 text-sm text-violet">{v.badge}</span>
       <Heading title={v.title} lead={v.lead} />
+      <p className="-mt-5 max-w-[38rem] text-pretty text-fog">{v.method}</p>
+      <a
+        href={interviewFormUrl}
+        target="_blank"
+        rel="noreferrer"
+        className="mt-4 mb-12 inline-block text-paper underline decoration-violet/60 underline-offset-4 hover:decoration-violet"
+      >
+        {v.formLabel} ↗
+      </a>
       <dl className="grid gap-8 md:grid-cols-3 md:gap-0">
         <div className="border-l-2 border-violet/60 pl-5 md:pr-6">
           <dt className="font-display text-4xl font-bold">{stats?.responses ?? "—"}</dt>
