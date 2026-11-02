@@ -1,6 +1,6 @@
 "use client";
 
-import { interviewFormUrl, sources, type InterviewGroup, type Tier } from "@/content/fiki";
+import { interviewFormUrl, sources, type DiscoveryBlock, type InterviewGroup, type Tier } from "@/content/fiki";
 import type { InterviewBreakdown, InterviewStats } from "@/lib/interviewStats";
 import { useLang } from "./LangProvider";
 import { LossCalculator } from "./LossCalculator";
@@ -299,6 +299,101 @@ function Business() {
   );
 }
 
+// Renders `**bold**` runs from the discovery copy.
+function Rich({ text }: { text: string }) {
+  return text.split("**").map((chunk, i) =>
+    i % 2 ? (
+      <strong key={i} className="font-semibold text-paper">
+        {chunk}
+      </strong>
+    ) : (
+      chunk
+    ),
+  );
+}
+
+function Block({ block }: { block: DiscoveryBlock }) {
+  switch (block.kind) {
+    case "h":
+      return <h4 className="mt-10 font-display text-xl font-semibold first:mt-0">{block.text}</h4>;
+    case "p":
+      return (
+        <p className="mt-4 text-pretty text-fog">
+          <Rich text={block.text} />
+        </p>
+      );
+    case "ul":
+    case "ol": {
+      const List = block.kind;
+      return (
+        <List
+          start={block.kind === "ol" ? block.start : undefined}
+          className={`mt-4 space-y-2 pl-6 text-fog marker:text-violet ${block.kind === "ol" ? "list-decimal marker:font-mono marker:text-sm" : "list-disc"}`}
+        >
+          {block.items.map((it) => (
+            <li key={it} className="pl-1">
+              <Rich text={it} />
+            </li>
+          ))}
+        </List>
+      );
+    }
+    case "table": {
+      const [head, ...rows] = block.rows;
+      return (
+        <div className="mt-6 overflow-x-auto">
+          <table className="w-full min-w-[36rem] text-left text-[0.95rem]">
+            <thead className="text-sm text-fog">
+              <tr>
+                {head.map((cell) => (
+                  <th key={cell} className="pr-6 pb-3 font-normal">
+                    {cell}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row) => (
+                <tr key={row[0]} className="border-t border-rule align-top">
+                  {row.map((cell, i) => (
+                    <td key={i} className={`py-3.5 pr-6 ${i === 0 ? "font-semibold" : "text-fog"}`}>
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+  }
+}
+
+function Discovery() {
+  const { t } = useLang();
+  const d = t.discovery;
+  return (
+    <Section id="discovery" className="border-t border-rule">
+      <span className="mb-6 inline-block rounded-sm border border-violet/60 px-2.5 py-1 text-sm text-violet">{d.badge}</span>
+      <Heading title={d.title} />
+      {d.parts.map((part, i) => (
+        <div key={part.title} className="grid gap-4 border-t border-rule py-10 md:grid-cols-[14rem_1fr] md:gap-8">
+          <h3 className="font-display text-xl font-semibold text-balance">
+            <span className="mb-1 block font-mono text-sm text-violet">{i + 1}</span>
+            {part.title}
+          </h3>
+          <div className="max-w-[44rem] min-w-0 [&>*:first-child]:mt-0">
+            {part.blocks.map((block, j) => (
+              <Block key={j} block={block} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </Section>
+  );
+}
+
 function Breakdown({ group, data }: { group: InterviewGroup; data: InterviewBreakdown }) {
   const { t } = useLang();
   const answers = group.sorted ? [...data.answers].sort((a, b) => b.count - a.count) : data.answers;
@@ -338,7 +433,6 @@ function Interviews({ stats }: { stats: InterviewStats | null }) {
 
   return (
     <Section id="interviews" className="border-t border-rule">
-      <span className="mb-6 inline-block rounded-sm border border-violet/60 px-2.5 py-1 text-sm text-violet">{v.badge}</span>
       <Heading title={v.title} lead={v.lead} />
       <p className="-mt-5 max-w-[38rem] text-pretty text-fog">{v.method}</p>
       <a
@@ -428,6 +522,7 @@ export function Fiki({ interviews }: { interviews: InterviewStats | null }) {
           <Competition />
           <Advantage />
           <Business />
+          <Discovery />
           <Interviews stats={interviews} />
         </main>
         <Footer />

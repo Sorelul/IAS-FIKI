@@ -48,6 +48,19 @@ export type Source = { label: string; url: string };
 export type InterviewGroup = { key: string; title: string; note?: string; sorted?: boolean };
 export type InterviewHighlight = { key: string; answers: string[]; label: string };
 
+export type DiscoveryBlock =
+  | { kind: "p" | "h"; text: string }
+  | { kind: "ul"; items: string[] }
+  | { kind: "ol"; items: string[]; start: number }
+  | { kind: "table"; rows: string[][] };
+export type DiscoveryPart = { title: string; blocks: DiscoveryBlock[] };
+
+const p = (text: string): DiscoveryBlock => ({ kind: "p", text });
+const h = (text: string): DiscoveryBlock => ({ kind: "h", text });
+const ul = (...items: string[]): DiscoveryBlock => ({ kind: "ul", items });
+const ol = (start: number, ...items: string[]): DiscoveryBlock => ({ kind: "ol", start, items });
+const table = (...rows: string[][]): DiscoveryBlock => ({ kind: "table", rows });
+
 const team = (roles: Record<string, [string, string]>): Member[] => [
   {
     name: "Cotuna Dumitru-Sorin",
@@ -122,7 +135,7 @@ const sources: Source[] = [
 const milestonesRo: Milestone[] = [
   { id: "M0", week: "termen 14.10.26", title: "Formare echipă", status: "done", target: "top" },
   { id: "M1", week: "termen 19.10.26", title: "Fiki & descriere proiect", status: "done", target: "top" },
-  { id: "M2", week: "termen 02.11.26", title: "Validare cu clienți", status: "current", target: "interviews" },
+  { id: "M2", week: "termen 02.11.26", title: "Validare cu clienți", status: "current", target: "discovery" },
   { id: "M3", week: "termen 09.11.26", title: "—", status: "upcoming" },
   { id: "M4", week: "termen 16.11.26", title: "—", status: "upcoming" },
   { id: "M5", week: "termen 02.12.26", title: "—", status: "upcoming", highlight: "Prezentare progres" },
@@ -152,6 +165,7 @@ const ro = {
     ["market", "Clienți"],
     ["competition", "Competiția"],
     ["business", "Business"],
+    ["discovery", "Discovery"],
     ["interviews", "Interviuri"],
   ] as [string, string][],
   hero: {
@@ -293,8 +307,179 @@ const ro = {
       "Platformele și agențiile pot lua varianta white-label",
     ],
   },
-  interviews: {
+  discovery: {
     badge: "Milestone 2: validare cu clienți",
+    title: "Customer discovery process",
+    parts: [
+      {
+        title: "Cum am identificat problema",
+        blocks: [
+          p("Problema ne-a fost semnalată de un comerciant din rețeaua noastră, care vinde online și lucrează mult cu plata ramburs. Din experiența lui, cam 1 din 30 de comenzi ramburs se întoarce refuzată la ușă."),
+          p("Când am descompus costul unui astfel de colet, am văzut că magazinul îl plătește de trei ori:"),
+          ul(
+            "**transportul dus**, deja plătit și nerecuperabil;",
+            "**transportul retur**, pe care curierul îl taxează la fel ca livrarea;",
+            "**marfa blocată**, care stă zile întregi pe drum în loc să fie vândută altui client.",
+          ),
+          p("Pentru un magazin cu 500 de comenzi ramburs pe lună, o rată de refuz de 4% și 20 de lei transport pe sens, asta înseamnă 800 de lei pe lună, adică 9.600 de lei pe an, doar din transport. Pierderea e greu de observat, pentru că se amestecă printre facturile de curierat și rareori e urmărită separat."),
+          p("Am verificat apoi dacă e o problemă izolată. Rambursul e metoda de plată aleasă de 31% dintre cumpărătorii români, cea mai folosită, într-o piață de e-commerce de aproximativ 11,5 miliarde de euro în 2024. Am găsit și mai multe soluții improvizate de comercianți: confirmarea telefonică a fiecărei comenzi, blacklist-uri în MerchantPro și Gomag, liste publice cu „clienți neserioși”. Faptul că magazinele investesc deja timp și bani în ocolirea problemei ne-a arătat că durerea e reală."),
+        ],
+      },
+      {
+        title: "Ce soluție am gândit",
+        blocks: [
+          p("RamburShield dă fiecărei comenzi ramburs un scor de risc între 0 și 1 și recomandă cel mai mic pas care scade riscul. Azi magazinul are două variante: acceptă rambursul pentru toată lumea și înghite refuzurile, sau îl scoate și pierde clienții care vor să plătească la ușă. Noi îi oferim o a treia variantă:"),
+          table(
+            ["Risc", "Ce recomandăm", "Ce simte clientul"],
+            ["Scăzut", "Comanda pleacă normal", "Nimic, nu știe că a fost verificată"],
+            ["Mediu", "SMS sau telefon de confirmare înainte de expediere", "Un mesaj de confirmare"],
+            ["Ridicat", "Avans mic sau plată online", "Un pas în plus; dacă refuză, magazinul a evitat un retur"],
+          ),
+          p("**Cum funcționează.** Comanda intră printr-un plugin de WooCommerce sau Shopify ori prin API. Strângem semnale (istoricul din rețea, telefonul, adresa, valoarea, ora comenzii), calculăm scorul și afișăm recomandarea. Rezultatul real al livrării se întoarce în model, care se îmbunătățește în timp."),
+          p("**De ce o rețea.** Un blacklist din platformă vede doar clienții unui singur magazin, care trebuie mai întâi să plătească refuzul ca să afle de el. La noi, cine refuză la un magazin e semnalat la toate, iar scorul devine mai bun cu fiecare magazin nou."),
+          p("**GDPR din prima zi.** Nu publicăm liste de nume. Identificatorii sunt pseudonimizați, magazinele văd doar scorul, iar interesul legitim e documentat într-un DPIA."),
+          p("**Model de venit (ipoteză de testat).** Starter 99 lei/lună (până la 500 de comenzi scorate), Growth 249 lei/lună (până la 2.000), Scale la cerere. SMS-urile de confirmare se refacturează cu o marjă mică, iar platformele și agențiile pot lua o variantă white-label."),
+        ],
+      },
+      {
+        title: "Planul de customer discovery, pe scurt",
+        blocks: [
+          p("Vrem să aflăm dacă refuzurile ramburs dor destul de tare încât un magazin să plătească pentru un scor de risc și să ne dea date ca să-l construim. Planul are cinci pași:"),
+          ol(
+            1,
+            "**Ipotezele.** Am scris ce trebuie să fie adevărat ca ideea să merite (secțiunea 4.5).",
+            "**Instrumentul.** Am construit un formular de interviu după regulile din The Mom Test: întrebăm despre situații concrete prin care comerciantul a trecut deja, nu îl rugăm să ne evalueze ideea.",
+            "**Interviurile.** Le facem față în față sau la telefon cu magazine din rețeaua noastră, folosind formularul ca script. Celor care nu au timp de o discuție le trimitem formularul să-l completeze singuri.",
+            "**Analiza.** Agregăm răspunsurile și le comparăm cu pragurile de validare stabilite dinainte. Pe site publicăm doar totaluri, de la 3 răspunsuri în sus, ca să nu se poată deduce cine ce a spus.",
+            "**Decizia.** Continuăm, ajustăm produsul sau pivotăm spre problema pe care comercianții o numesc cel mai des.",
+          ),
+        ],
+      },
+      {
+        title: "Procesul în detaliu",
+        blocks: [
+          h("4.1 Segmentele de clienți"),
+          p("Am pornit de la cine pierde cel mai mult din refuzuri: magazinele la care rambursul e o bucată mare din vânzări și care au destul volum ca pierderea să conteze, dar nu atât de mare încât să-și construiască singure un sistem de scoring."),
+          table(
+            ["Segment", "Cine e", "De ce îl alegem"],
+            ["Țintă principală", "Magazine online mici și medii din România, 100–3.000 de comenzi pe lună", "Rambursul are pondere mare, iar refuzurile se adună la mii de lei pe an"],
+            ["Early adopters", "Magazine WooCommerce și Shopify din rețeaua echipei", "Ajungem direct la decident, ne pot da date și pot deveni primii clienți plătitori"],
+            ["Mai târziu", "Platforme și agenții de e-commerce (Gomag, MerchantPro)", "Pot integra scorul pentru toți clienții lor, prin white-label"],
+          ),
+          p("În fiecare magazin căutăm două roluri: **cel care decide și plătește** (proprietarul sau managerul) și **cel care trăiește problema zilnic** (persoana care confirmă comenzile și pregătește coletele). De multe ori, într-un magazin mic, e același om."),
+          h("4.2 Cum ajungem la ei"),
+          p("Nu cumpărăm trafic și nu facem cold outreach în prima fază. Pornim de la relațiile directe pe care echipa le are deja cu magazine online. Ei ne răspund mai ușor și mai sincer, iar o recomandare de la ei ne deschide ușa la alți comercianți. Cristian (Product & Customer Dev) coordonează interviurile, iar Sorin (Team Lead) se ocupă de relația cu partenerii."),
+          h("4.3 Cum colectăm informația"),
+          ul(
+            "**Interviuri față în față și la telefon**, de 15–20 de minute. Formularul e scriptul, iar noi notăm răspunsurile și punem întrebări de follow-up pe poveștile concrete.",
+            "**Formular online** (Google Forms, 4 pagini, 5–7 minute) pentru cei care preferă să-l completeze singuri.",
+            "**Statistici agregate pe site**, actualizate automat din formular, fără nume de firme.",
+          ),
+          p("Am ales interviul ghidat în locul unui chestionar clasic pentru că ne interesează poveștile: ultima comandă refuzată, ce a costat, ce s-a făcut după. Un chestionar cu note de la 1 la 5 ne-ar fi spus doar că „problema e importantă”, ceea ce nu validează nimic."),
+          h("4.4 Întrebările"),
+          p("**Partea 1: Context** (ca să știm în ce segment e magazinul)"),
+          ol(
+            1,
+            "Numele firmei și rolul dumneavoastră",
+            "Platforma magazinului (WooCommerce, Shopify, Gomag, MerchantPro, altele)",
+            "Comenzi pe lună (sub 100 / 100–500 / 500–2.000 / peste 2.000)",
+            "Ce procent din comenzi sunt cu plata ramburs?",
+            "De cât timp vândeți online?",
+            "Câți oameni lucrează în firmă?",
+            "Ce curieri folosiți?",
+          ),
+          p("**Partea 2: Problema** (cât de reală și de scumpă e, judecată din fapte trecute)"),
+          ol(
+            8,
+            "Povestiți ultima dată când un client a refuzat un colet ramburs. Ce s-a întâmplat și ce ați făcut după?",
+            "Câte colete refuzate sau neridicate ați avut luna trecută, aproximativ?",
+            "Care sunt cele mai frecvente motive de refuz?",
+            "Observați tipare la clienții care refuză? (zonă, oră, valoare, tip de produs, client nou)",
+            "Ce vă costă un refuz? (transport, timp, produs blocat, altceva)",
+            "Ce ați încercat până acum ca să reduceți refuzurile? Ce a funcționat și ce nu?",
+            "Țineți evidența clienților care au refuzat? Unde?",
+            "Ați primit o comandă nouă de la un client care refuzase înainte? Ce ați făcut?",
+            "Cine se ocupă de asta în firmă și cât timp îi ia pe săptămână?",
+            "Ați plătit vreodată pentru o soluție la problema asta (serviciu, tool, call center)? Dacă da, cât?",
+            "Dacă refuzurile ar dispărea mâine, ce s-ar schimba concret pentru afacerea dumneavoastră?",
+          ),
+          p("**Partea 3: Ideea noastră** (abia aici o prezentăm, în o singură propoziție, și testăm cum ar fi adoptată și plătită)"),
+          ol(
+            19,
+            "Ce faceți, pas cu pas, chiar acum, când trebuie să decideți dacă acceptați o comandă ramburs riscantă?",
+            "Ați renunțat vreodată la un tool sau serviciu pentru magazin? Ce s-a întâmplat și de ce?",
+            "Când verificați o comandă riscantă, la ce informații vă uitați?",
+            "În ce sistem verificați comenzile înainte să le trimiteți la curier?",
+            "Ne puteți trimite, pentru test, un extras anonimizat din istoricul de livrări? (Da / Da, cu condiții / Nu) și de ce?",
+            "Pentru alte servicii pe care le folosiți deja (curierat, contabilitate, marketing), ce model de tarifare aveți?",
+            "Pentru abonamentele existente, preferați plata lunară, anuală sau în funcție de volum? De ce?",
+            "Cât cheltuiți lunar pe servicii sau resurse legate de refuzuri (curierat suplimentar, verificări, personal, tooluri)?",
+            "Cine a decis ultima dată când ați cumpărat un tool nou pentru magazin? Cum a decurs decizia?",
+            "Ce altă problemă vă consumă cel mai mult timp în magazin?",
+          ),
+          p("**Partea 4: Contact**"),
+          ol(29, "Doriți acces la versiunea beta?", "Email sau telefon (opțional)"),
+          p("Întrebarea 23 e cea mai importantă din tot interviul. Un comerciant care acceptă să ne dea date reale ne plătește deja cu ceva care costă, iar asta e un semnal mult mai puternic decât un „ar fi util”. Întrebarea 28 ne arată încotro s-ar putea pivota dacă refuzurile nu se dovedesc o prioritate."),
+          h("4.5 Ce am aflat până acum și ce urmărim"),
+          p("Din discuția inițială cu comerciantul și din cercetarea pieței am reținut patru lucruri:"),
+          ul(
+            "**Refuzurile sunt o pierdere recurentă, nu un accident.** Comerciantul le estimează la cam 1 din 30 de comenzi ramburs, iar costul se dublează prin returul plătit.",
+            "**Soluțiile de azi sunt manuale sau locale.** Confirmarea telefonică mănâncă ore pe zi și nu oprește clienții care confirmă, apoi refuză oricum. Blacklist-urile din platformă văd doar istoricul unui singur magazin.",
+            "**Varianta „comună” există deja, dar ilegal.** Listele publice cu „clienți neserioși” arată că magazinele vor să împărtășească informația. Un astfel de site a fost amendat de ANSPDCP și obligat să șteargă datele.",
+            "**Nu există un concurent direct în România.** Shiprocket (RTO Score) și GoKwik fac scoring pentru plata la livrare, dar doar în India și în ecosistemul lor, fără GDPR.",
+          ),
+          p("Interviurile cu magazinele sunt acum în desfășurare. Fiecare ipoteză are o întrebare care o testează și un prag stabilit dinainte, ca să nu ne păcălim singuri citind rezultatele:"),
+          table(
+            ["Ipoteză", "Se testează prin", "O considerăm validată dacă", "Rezultat"],
+            ["Refuzurile sunt o problemă simțită", "Î8, Î9, Î12", "cel puțin 60% descriu un refuz recent și îi pot estima costul", "în curs"],
+            ["Pierderea nu e urmărită separat", "Î14, Î26", "cel puțin jumătate nu țin evidența sau nu au calculat costul", "în curs"],
+            ["Soluțiile actuale costă timp", "Î13, Î16, Î19", "cel puțin jumătate verifică manual comenzile, cu ore de lucru pe săptămână", "în curs"],
+            ["Magazinele ne dau date", "Î23", "cel puțin 40% răspund „Da” sau „Da, cu condiții”", "în curs"],
+            ["Prețul de 99–249 lei/lună e acceptabil", "Î17, Î24–Î26", "costul actual al problemei depășește abonamentul propus", "în curs"],
+            ["Integrarea WooCommerce/Shopify acoperă piața", "Î2, Î22", "majoritatea magazinelor sunt pe aceste platforme", "în curs"],
+            ["Există interes pentru beta", "Î29, Î30", "cel puțin jumătate cer acces și lasă un contact", "în curs"],
+          ),
+        ],
+      },
+      {
+        title: "Cum ne-au schimbat produsul aceste insight-uri",
+        blocks: [
+          p("Ce am aflat a dat forma produsului: un scor cu recomandări gradate, nu o listă de clienți care refuză."),
+          table(
+            ["Ce am aflat", "Ce am schimbat în produs"],
+            ["Listele publice de „clienți neserioși” au fost amendate de ANSPDCP", "Nu afișăm niciun nume. Identificatorii sunt pseudonimizați, magazinul vede doar un scor, iar interesul legitim e documentat într-un DPIA"],
+            ["Rambursul e metoda preferată, iar scoaterea lui pierde clienți buni", "Nu blocăm comenzi. Recomandăm cel mai mic pas: trimite, confirmă sau cere avans. Clientul cu risc scăzut nu simte nimic"],
+            ["Unii clienți confirmă la telefon, apoi refuză oricum", "Pentru risc ridicat recomandăm un avans mic, nu doar o confirmare. Un client care plătește un avans are motiv să ridice coletul"],
+            ["Blacklist-ul din platformă vede doar istoricul unui magazin", "Rețeaua devine nucleul produsului: un refuz la un magazin îi protejează pe toți ceilalți"],
+            ["Magazinele din rețeaua noastră sunt pe WooCommerce și Shopify", "Primele integrări sunt plugin-uri pentru aceste două platforme, apoi API pentru restul"],
+            ["Volumul de comenzi diferă mult de la un magazin la altul", "Prețul e pe trepte, în funcție de numărul de comenzi scorate, nu un tarif fix"],
+          ),
+          p("Interviurile în curs vor decide următoarele ajustări. Î22 ne spune dacă scorul trebuie să apară în adminul magazinului sau în panoul curierului. Î23 ne spune dacă putem antrena modelul pe date reale de la început. Î24–Î26 ne spun dacă păstrăm abonamentul lunar sau trecem la plată per comandă."),
+        ],
+      },
+      {
+        title: "Suntem pregătiți pentru Customer Validation?",
+        blocks: [
+          p("Nu încă, dar suntem aproape. Problema e confirmată din mai multe surse, însă disponibilitatea de a plăti și de a ne da date trebuie să vină de la magazine, nu din estimările noastre."),
+          p("**Ce avem deja:**"),
+          ul(
+            "**Problema e reală și măsurabilă.** O semnalează un comerciant activ, costul se poate calcula pe fiecare colet, iar rambursul e metoda de plată dominantă în România.",
+            "**Comercianții plătesc deja pentru ea.** Plătesc cu ore de confirmări telefonice, blacklist-uri ținute manual și chiar liste ilegale. Asta arată că problema e destul de dureroasă cât să caute singuri soluții.",
+            "**Nișa e liberă.** Soluțiile de scoring ramburs există doar în India, iar în România nu am găsit un concurent direct.",
+            "**Avem acces la primii clienți.** Relațiile directe cu magazine online ne permit să testăm vânzarea fără buget de marketing.",
+          ),
+          p("**Ce ne lipsește:**"),
+          ul(
+            "**Pragurile din secțiunea 4.5 nu sunt atinse încă.** Le stabilisem tocmai ca să nu trecem mai departe pe baza unei singure discuții.",
+            "**Nu știm dacă magazinele ne dau date.** Fără un istoric de livrări, scorul nu poate fi validat, iar efectul de rețea nu pornește.",
+            "**Prețul nu e testat.** 99 și 249 lei/lună sunt estimarea noastră și trebuie comparate cu cât cheltuiesc magazinele azi pe problemă.",
+          ),
+          p("**Când trecem la Customer Validation.** Trecem când cel puțin patru din cele șapte ipoteze din 4.5 sunt validate, inclusiv cea despre date. Concret, ne trebuie cel puțin 3 magazine care acceptă să ne trimită un extras anonimizat din istoricul de livrări. În faza de validare le oferim un pilot: scorăm retroactiv comenzile lor din ultimele luni, le arătăm câte refuzuri ar fi fost prinse și câți lei ar fi economisit, apoi cerem semnarea abonamentului Starter la prețul de listă."),
+        ],
+      },
+    ] as DiscoveryPart[],
+  },
+  interviews: {
     title: "Ce spun comercianții",
     lead: "Întrebăm magazinele online cum stau cu refuzurile și dacă ar folosi un scor de risc. Cifrele vin direct din formularul de interviu și se actualizează singure. Răspunsurile sunt confidențiale, așa că arătăm doar totaluri, fără nume de firme.",
     method:
@@ -345,6 +530,7 @@ const en: Content = {
     ["market", "Customers"],
     ["competition", "Competition"],
     ["business", "Business"],
+    ["discovery", "Discovery"],
     ["interviews", "Interviews"],
   ],
   hero: {
@@ -486,8 +672,179 @@ const en: Content = {
       "Platforms and agencies can take the white-label version",
     ],
   },
-  interviews: {
+  discovery: {
     badge: "Milestone 2: customer validation",
+    title: "Customer discovery process",
+    parts: [
+      {
+        title: "How we identified the problem",
+        blocks: [
+          p("The problem was flagged to us by a merchant in our network who sells online and does a lot of cash-on-delivery business. In their experience, about 1 in 30 COD orders comes back refused at the door."),
+          p("When we broke down the cost of one such parcel, we saw the store pays for it three times:"),
+          ul(
+            "**outbound shipping**, already paid and not recoverable;",
+            "**return shipping**, which the courier charges just like a delivery;",
+            "**stuck inventory**, which spends days in transit instead of being sold to another customer.",
+          ),
+          p("For a store with 500 COD orders a month, a 4% refusal rate and 20 RON shipping each way, that's 800 RON a month, or 9,600 RON a year, from shipping alone. The loss is hard to spot because it's mixed in with the courier invoices and rarely tracked on its own."),
+          p("We then checked whether it's an isolated problem. Cash on delivery is the payment method chosen by 31% of Romanian shoppers, the most used one, in an e-commerce market worth about €11.5 billion in 2024. We also found several workarounds merchants have improvised: confirming every order by phone, blacklists in MerchantPro and Gomag, public lists of “bad customers”. The fact that stores already spend time and money working around the problem showed us the pain is real."),
+        ],
+      },
+      {
+        title: "The solution we came up with",
+        blocks: [
+          p("RamburShield gives every COD order a risk score between 0 and 1 and recommends the smallest step that lowers the risk. Today a store has two options: accept COD for everyone and swallow the refusals, or drop it and lose the customers who want to pay at the door. We offer a third one:"),
+          table(
+            ["Risk", "What we recommend", "What the customer notices"],
+            ["Low", "The order ships as usual", "Nothing, they don't know it was checked"],
+            ["Medium", "A confirmation SMS or call before shipping", "One confirmation message"],
+            ["High", "A small deposit or online payment", "One extra step; if they refuse, the store has avoided a return"],
+          ),
+          p("**How it works.** The order comes in through a WooCommerce or Shopify plugin, or the API. We gather signals (network history, phone, address, value, time of the order), calculate the score and show the recommendation. The actual delivery outcome goes back into the model, which improves over time."),
+          p("**Why a network.** A platform blacklist only sees one store's customers, and that store has to pay for the refusal first to find out about it. With us, whoever refuses at one store is flagged at all of them, and the score gets better with every new store."),
+          p("**GDPR from day one.** We don't publish lists of names. Identifiers are pseudonymised, stores only see the score, and the legitimate interest is documented in a DPIA."),
+          p("**Revenue model (a hypothesis to test).** Starter at 99 RON/month (up to 500 scored orders), Growth at 249 RON/month (up to 2,000), Scale on request. Confirmation SMS are billed through at a small margin, and platforms and agencies can take a white-label version."),
+        ],
+      },
+      {
+        title: "Our customer discovery plan, in short",
+        blocks: [
+          p("We want to find out whether COD refusals hurt enough for a store to pay for a risk score and give us data to build it. The plan has five steps:"),
+          ol(
+            1,
+            "**The hypotheses.** We wrote down what has to be true for the idea to be worth it (section 4.5).",
+            "**The tool.** We built an interview form following the rules of The Mom Test: we ask about concrete situations the merchant has already been through, and never ask them to rate our idea.",
+            "**The interviews.** We run them in person or by phone with stores in our network, using the form as a script. Those who don't have time for a conversation get the form to fill in on their own.",
+            "**The analysis.** We aggregate the answers and compare them against validation thresholds set in advance. On the site we only publish totals, from 3 responses up, so nobody can work out who said what.",
+            "**The decision.** We continue, adjust the product, or pivot towards the problem merchants mention most often.",
+          ),
+        ],
+      },
+      {
+        title: "The process in detail",
+        blocks: [
+          h("4.1 Customer segments"),
+          p("We started from who loses the most to refusals: stores where COD is a big share of sales and that have enough volume for the loss to matter, but not so much that they'd build a scoring system themselves."),
+          table(
+            ["Segment", "Who they are", "Why we pick them"],
+            ["Main target", "Small and mid-size Romanian online stores, 100–3,000 orders a month", "COD is a big share of sales, and refusals add up to thousands of RON a year"],
+            ["Early adopters", "WooCommerce and Shopify stores in the team's network", "We reach the decision maker directly, they can give us data and can become the first paying customers"],
+            ["Later on", "E-commerce platforms and agencies (Gomag, MerchantPro)", "They can integrate the score for all their clients, via white-label"],
+          ),
+          p("In every store we look for two roles: **the one who decides and pays** (the owner or manager) and **the one who lives the problem every day** (the person who confirms orders and packs the parcels). In a small store it's often the same person."),
+          h("4.2 How we reach them"),
+          p("We don't buy traffic and we don't do cold outreach in the first phase. We start from the direct relationships the team already has with online stores. They answer more readily and more honestly, and a recommendation from them opens the door to other merchants. Cristian (Product & Customer Dev) coordinates the interviews, and Sorin (Team Lead) handles the relationship with partners."),
+          h("4.3 How we collect information"),
+          ul(
+            "**In-person and phone interviews** of 15–20 minutes. The form is the script; we note the answers and ask follow-up questions about the concrete stories.",
+            "**Online form** (Google Forms, 4 pages, 5–7 minutes) for those who'd rather fill it in on their own.",
+            "**Aggregate statistics on the site**, updated automatically from the form, with no company names.",
+          ),
+          p("We chose a guided interview over a classic survey because we care about the stories: the last refused order, what it cost, what happened next. A survey with 1-to-5 ratings would only have told us that “the problem is important”, which validates nothing."),
+          h("4.4 The questions"),
+          p("**Part 1: Context** (so we know which segment the store is in)"),
+          ol(
+            1,
+            "Company name and your role",
+            "Store platform (WooCommerce, Shopify, Gomag, MerchantPro, other)",
+            "Orders per month (under 100 / 100–500 / 500–2,000 / over 2,000)",
+            "What share of orders are paid by cash on delivery?",
+            "How long have you been selling online?",
+            "How many people work in the company?",
+            "Which couriers do you use?",
+          ),
+          p("**Part 2: The problem** (how real and how costly it is, judged from past events)"),
+          ol(
+            8,
+            "Tell us about the last time a customer refused a COD parcel. What happened and what did you do afterwards?",
+            "Roughly how many parcels were refused or not picked up last month?",
+            "What are the most common reasons for refusal?",
+            "Do you notice patterns among customers who refuse? (area, time, value, product type, new customer)",
+            "What does a refusal cost you? (shipping, time, stuck product, something else)",
+            "What have you tried so far to reduce refusals? What worked and what didn't?",
+            "Do you keep track of customers who refused? Where?",
+            "Have you received a new order from a customer who had refused before? What did you do?",
+            "Who handles this in the company and how much time does it take them per week?",
+            "Have you ever paid for a solution to this problem (service, tool, call center)? If so, how much?",
+            "If refusals disappeared tomorrow, what would concretely change for your business?",
+          ),
+          p("**Part 3: Our idea** (only here do we present it, in a single sentence, and test how it would be adopted and paid for)"),
+          ol(
+            19,
+            "What do you do, step by step, right now, when you have to decide whether to accept a risky COD order?",
+            "Have you ever dropped a tool or service for your store? What happened and why?",
+            "When you check a risky order, what information do you look at?",
+            "In which system do you check orders before handing them to the courier?",
+            "Could you send us, for testing, an anonymised extract of your delivery history? (Yes / Yes, with conditions / No) And why?",
+            "For other services you already use (courier, accounting, marketing), what pricing model do you have?",
+            "For your existing subscriptions, do you prefer paying monthly, yearly or by volume? Why?",
+            "How much do you spend each month on services or resources related to refusals (extra shipping, checks, staff, tools)?",
+            "Who made the decision the last time you bought a new tool for the store? How did it go?",
+            "What other problem takes up the most of your time in the store?",
+          ),
+          p("**Part 4: Contact**"),
+          ol(29, "Would you like access to the beta version?", "Email or phone (optional)"),
+          p("Question 23 is the most important in the whole interview. A merchant who agrees to give us real data is already paying us with something that costs them, and that's a much stronger signal than “it would be useful”. Question 28 shows us where we could pivot if refusals turn out not to be a priority."),
+          h("4.5 What we've learned so far and what we're tracking"),
+          p("From the first conversation with the merchant and from market research we took away four things:"),
+          ul(
+            "**Refusals are a recurring loss, not an accident.** The merchant puts them at about 1 in 30 COD orders, and the cost doubles through the paid return.",
+            "**Today's solutions are manual or local.** Phone confirmation eats hours a day and doesn't stop customers who confirm, then refuse anyway. Platform blacklists only see one store's history.",
+            "**The “shared” version already exists, but illegally.** Public lists of “bad customers” show that stores want to share the information. One such site was fined by the Romanian DPA (ANSPDCP) and ordered to delete the data.",
+            "**There's no direct competitor in Romania.** Shiprocket (RTO Score) and GoKwik score cash-on-delivery orders, but only in India and inside their own ecosystem, without GDPR.",
+          ),
+          p("The interviews with stores are under way now. Every hypothesis has a question that tests it and a threshold set in advance, so we don't fool ourselves when reading the results:"),
+          table(
+            ["Hypothesis", "Tested by", "We consider it validated if", "Result"],
+            ["Refusals are a felt problem", "Q8, Q9, Q12", "at least 60% describe a recent refusal and can estimate its cost", "in progress"],
+            ["The loss isn't tracked separately", "Q14, Q26", "at least half don't keep records or haven't calculated the cost", "in progress"],
+            ["Current solutions cost time", "Q13, Q16, Q19", "at least half check orders manually, spending hours a week on it", "in progress"],
+            ["Stores will give us data", "Q23", "at least 40% answer “Yes” or “Yes, with conditions”", "in progress"],
+            ["A price of 99–249 RON/month is acceptable", "Q17, Q24–Q26", "the current cost of the problem exceeds the proposed subscription", "in progress"],
+            ["WooCommerce/Shopify integration covers the market", "Q2, Q22", "most stores are on these platforms", "in progress"],
+            ["There's interest in the beta", "Q29, Q30", "at least half ask for access and leave a contact", "in progress"],
+          ),
+        ],
+      },
+      {
+        title: "How these insights changed the product",
+        blocks: [
+          p("What we learned shaped the product: a score with graded recommendations, not a list of customers who refuse."),
+          table(
+            ["What we learned", "What we changed in the product"],
+            ["Public lists of “bad customers” were fined by the Romanian DPA", "We don't show any names. Identifiers are pseudonymised, the store only sees a score, and the legitimate interest is documented in a DPIA"],
+            ["COD is the preferred method, and dropping it loses good customers", "We don't block orders. We recommend the smallest step: ship, confirm or ask for a deposit. A low-risk customer notices nothing"],
+            ["Some customers confirm by phone, then refuse anyway", "For high risk we recommend a small deposit, not just a confirmation. A customer who has paid a deposit has a reason to pick up the parcel"],
+            ["A platform blacklist only sees one store's history", "The network becomes the core of the product: a refusal at one store protects all the others"],
+            ["The stores in our network are on WooCommerce and Shopify", "The first integrations are plugins for these two platforms, then an API for the rest"],
+            ["Order volume varies a lot from store to store", "Pricing is tiered by the number of scored orders, not a flat fee"],
+          ),
+          p("The ongoing interviews will decide the next adjustments. Q22 tells us whether the score should show up in the store's admin or in the courier panel. Q23 tells us whether we can train the model on real data from the start. Q24–Q26 tell us whether we keep the monthly subscription or switch to paying per order."),
+        ],
+      },
+      {
+        title: "Are we ready for Customer Validation?",
+        blocks: [
+          p("Not yet, but we're close. The problem is confirmed by several sources, but the willingness to pay and to give us data has to come from the stores, not from our own estimates."),
+          p("**What we already have:**"),
+          ul(
+            "**The problem is real and measurable.** An active merchant reports it, the cost can be calculated per parcel, and COD is the dominant payment method in Romania.",
+            "**Merchants already pay for it.** They pay with hours of phone confirmations, hand-kept blacklists and even illegal lists. That shows the problem hurts enough for them to look for solutions on their own.",
+            "**The niche is open.** COD scoring solutions only exist in India, and we haven't found a direct competitor in Romania.",
+            "**We have access to the first customers.** Direct relationships with online stores let us test selling without a marketing budget.",
+          ),
+          p("**What we're missing:**"),
+          ul(
+            "**The thresholds in section 4.5 haven't been reached yet.** We set them precisely so we wouldn't move on based on a single conversation.",
+            "**We don't know if stores will give us data.** Without a delivery history the score can't be validated, and the network effect doesn't kick in.",
+            "**The price isn't tested.** 99 and 249 RON/month are our estimate and need to be compared with what stores spend on the problem today.",
+          ),
+          p("**When we move to Customer Validation.** We move on when at least four of the seven hypotheses in 4.5 are validated, including the one about data. Concretely, we need at least 3 stores that agree to send us an anonymised extract of their delivery history. In the validation phase we offer them a pilot: we retroactively score their orders from the last few months, show them how many refusals would have been caught and how many RON they would have saved, then ask them to sign up for the Starter plan at list price."),
+        ],
+      },
+    ],
+  },
+  interviews: {
     title: "What merchants tell us",
     lead: "We ask online stores how they deal with refusals and whether they'd use a risk score. The numbers come straight from the interview form and update on their own. Answers are confidential, so we only show totals, with no company names.",
     method:
