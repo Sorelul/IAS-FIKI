@@ -55,6 +55,9 @@ export type DiscoveryBlock =
   | { kind: "table"; rows: string[][] };
 export type DiscoveryPart = { title: string; blocks: DiscoveryBlock[] };
 
+// M3: wireframes. Images live in public/wireframes/.
+export type WireframeScreen = { title: string; text: string; image: string; alt: string };
+
 const p = (text: string): DiscoveryBlock => ({ kind: "p", text });
 const h = (text: string): DiscoveryBlock => ({ kind: "h", text });
 const ul = (...items: string[]): DiscoveryBlock => ({ kind: "ul", items });
@@ -135,8 +138,8 @@ const sources: Source[] = [
 const milestonesRo: Milestone[] = [
   { id: "M0", week: "termen 14.10.26", title: "Formare echipă", status: "done", target: "top" },
   { id: "M1", week: "termen 19.10.26", title: "Fiki & descriere proiect", status: "done", target: "top" },
-  { id: "M2", week: "termen 02.11.26", title: "Validare cu clienți", status: "current", target: "discovery" },
-  { id: "M3", week: "termen 09.11.26", title: "—", status: "upcoming" },
+  { id: "M2", week: "termen 02.11.26", title: "Validare cu clienți", status: "done", target: "discovery" },
+  { id: "M3", week: "termen 09.11.26", title: "Wireframe & landing page", status: "current", target: "wireframes" },
   { id: "M4", week: "termen 16.11.26", title: "—", status: "upcoming" },
   { id: "M5", week: "termen 02.12.26", title: "—", status: "upcoming", highlight: "Prezentare progres" },
   { id: "M6", week: "termen 07.12.26", title: "—", status: "upcoming" },
@@ -148,7 +151,7 @@ const milestonesEn: Milestone[] = milestonesRo.map((m) => ({
   ...m,
   week: m.week.replace("termen", "due"),
   title:
-    { M0: "Team forming", M1: "Fiki & project description", M2: "Customer validation" }[m.id] ?? m.title,
+    { M0: "Team forming", M1: "Fiki & project description", M2: "Customer validation", M3: "Wireframe & landing page" }[m.id] ?? m.title,
   highlight:
     m.highlight === "Prezentare progres" ? "Progress presentation" : m.highlight === "Prezentare proiect" ? "Final presentation" : m.highlight,
 }));
@@ -167,6 +170,7 @@ const ro = {
     ["business", "Business"],
     ["discovery", "Discovery"],
     ["interviews", "Interviuri"],
+    ["wireframes", "Wireframes"],
   ] as [string, string][],
   hero: {
     badge: "Milestone 1: descrierea proiectului",
@@ -503,6 +507,30 @@ const ro = {
     ] as InterviewGroup[],
     labels: {} as Record<string, string>,
   },
+  wireframes: {
+    badge: "Milestone 3: wireframe și landing page",
+    title: "Cum arată RamburShield",
+    lead: "RamburShield nu e o aplicație separată, ci un plugin care trăiește în adminul magazinului. Așa că wireframe-urile arată două perspective: ce vede comerciantul în WooCommerce și ce vede clientul atunci când comanda lui are risc ridicat.",
+    landingLabel: "Vezi landing page-ul",
+    flow: {
+      title: "Fluxul principal",
+      text: "Am desenat drumul unei comenzi cu risc ridicat, pentru că e singurul caz în care cineva simte că RamburShield există. Comerciantul își alege pragurile o singură dată, din setări. Fiecare comandă ramburs nouă primește apoi un scor, vizibil direct în lista de comenzi. Dacă scorul e mare, comerciantul deschide comanda, vede de ce e riscantă și cere un avans. Clientul plătește avansul de pe telefon, iar coletul pleacă. Rezultatul livrării se întoarce în model, iar scorul devine mai bun. La risc mediu, clientul primește un SMS de confirmare în locul paginii de avans. La risc scăzut, comanda pleacă direct.",
+      image: "/wireframes/flux.png",
+      alt: "Diagrama fluxului: setări, lista de comenzi, detaliul comenzii, pagina de avans, expediere, cu rezultatul livrării întors în model",
+    },
+    screensTitle: "Ecranele",
+    screens: [
+      { title: "Lista de comenzi", text: "Comerciantul vede riscul fără să schimbe nimic din ce face azi: lista de comenzi WooCommerce primește o coloană nouă, „Risc”, cu scorul și nivelul. Un filtru arată doar comenzile riscante, ca cine pregătește coletele să știe dimineața de ce să se ocupe întâi.", image: "/wireframes/comenzi.png", alt: "Wireframe: lista de comenzi WooCommerce cu coloana Risc" },
+      { title: "Detaliul comenzii", text: "Lângă comandă apare caseta RamburShield: scorul, semnalele care l-au produs și recomandarea. Am pus semnalele la vedere ca un comerciant să nu ceară un avans fără să știe de ce. Câmpul „Rezultat livrare” închide bucla: din el învață modelul.", image: "/wireframes/comanda.png", alt: "Wireframe: detaliul comenzii cu caseta RamburShield" },
+      { title: "Setările pluginului", text: "Comerciantul decide de la ce scor o comandă e riscantă și ce se întâmplă la fiecare nivel. Avansul se poate da ca sumă fixă sau ca procent; în exemplu, 20% din 349 de lei înseamnă 70 de lei. Pragurile de 0.30 și 0.70 sunt un punct de plecare și le calibrăm după pilot.", image: "/wireframes/setari.png", alt: "Wireframe: setările pluginului cu praguri și acțiuni" },
+      { title: "Pagina de avans", text: "E singurul ecran pe care îl vede clientul, așa că l-am gândit pentru telefon. Îi spunem clar cât plătește acum și cât la livrare și îi lăsăm varianta să plătească toată comanda online.", image: "/wireframes/avans.png", alt: "Wireframe: pagina de plată a avansului pe mobil" },
+    ] as WireframeScreen[],
+    decisionsTitle: "Ce am decis la acest milestone",
+    decisions: [
+      ["Scorul apare în adminul magazinului, nu la checkout", "La checkout am fi putut ascunde automat rambursul, dar atunci clientul riscant ar vedea diferența pe loc, iar noi am promis că nu blocăm pe nimeni. Așa, comerciantul rămâne cel care decide. Întrebarea Î22 din interviuri ne spune dacă alegerea e corectă."],
+      ["Avansul e varianta de bază pentru risc ridicat", "La M2 am aflat că unii clienți confirmă la telefon și apoi refuză oricum. Un client care a plătit un avans are un motiv să ridice coletul."],
+    ] as [string, string][],
+  },
   milestones: {
     title: "Milestones",
     items: milestonesRo,
@@ -512,7 +540,7 @@ const ro = {
   },
   footer: {
     sources: "Surse",
-    note: "Pagina asta e jurnalul proiectului pentru Startup Engineering. Landing page-ul pentru clienți îl facem separat.",
+    note: "Pagina asta e jurnalul proiectului pentru Startup Engineering. Landing page-ul pentru clienți e separat, link-ul e la Milestone 3.",
   },
 };
 
@@ -532,6 +560,7 @@ const en: Content = {
     ["business", "Business"],
     ["discovery", "Discovery"],
     ["interviews", "Interviews"],
+    ["wireframes", "Wireframes"],
   ],
   hero: {
     badge: "Milestone 1: project description",
@@ -890,6 +919,30 @@ const en: Content = {
       Altele: "Other",
     },
   },
+  wireframes: {
+    badge: "Milestone 3: wireframe and landing page",
+    title: "What RamburShield looks like",
+    lead: "RamburShield isn't a separate app but a plugin that lives in the store's admin. So the wireframes show two points of view: what the merchant sees in WooCommerce, and what the customer sees when their order is high risk.",
+    landingLabel: "See the landing page",
+    flow: {
+      title: "The main flow",
+      text: "We drew the path of a high-risk order, because it's the only case where anyone notices RamburShield exists. The merchant sets the thresholds once, in the settings. Every new COD order then gets a score, shown right in the order list. If the score is high, the merchant opens the order, sees why it's risky and asks for a deposit. The customer pays the deposit from their phone and the parcel ships. The delivery outcome goes back into the model and the score gets better. For medium risk, the customer gets a confirmation SMS instead of the deposit page. For low risk, the order ships straight away.",
+      image: "/wireframes/flux.png",
+      alt: "Flow diagram: settings, order list, order detail, deposit page, shipping, with the delivery outcome fed back into the model",
+    },
+    screensTitle: "The screens",
+    screens: [
+      { title: "Order list", text: "The merchant sees the risk without changing anything about how they work today: the WooCommerce order list gets a new “Risk” column with the score and level. A filter shows only risky orders, so whoever packs the parcels knows first thing in the morning what to look at.", image: "/wireframes/comenzi.png", alt: "Wireframe: WooCommerce order list with a Risk column" },
+      { title: "Order detail", text: "Next to the order sits the RamburShield box: the score, the signals behind it and the recommendation. We keep the signals visible so a merchant never asks for a deposit without knowing why. The “Delivery outcome” field closes the loop: it's what the model learns from.", image: "/wireframes/comanda.png", alt: "Wireframe: order detail with the RamburShield box" },
+      { title: "Plugin settings", text: "The merchant decides from which score an order counts as risky and what happens at each level. The deposit can be a fixed amount or a percentage; in the example, 20% of 349 RON is 70 RON. The 0.30 and 0.70 thresholds are a starting point, and we'll calibrate them after the pilot.", image: "/wireframes/setari.png", alt: "Wireframe: plugin settings with thresholds and actions" },
+      { title: "Deposit page", text: "It's the only screen the customer sees, so we designed it for the phone. It says clearly how much they pay now and how much on delivery, and leaves them the option to pay the whole order online.", image: "/wireframes/avans.png", alt: "Wireframe: mobile deposit payment page" },
+    ],
+    decisionsTitle: "What we decided in this milestone",
+    decisions: [
+      ["The score shows up in the store's admin, not at checkout", "At checkout we could have hidden COD automatically, but then the risky customer would notice right away, and we promised not to block anyone. This way the merchant stays the one who decides. Question Q22 in the interviews tells us whether that's the right call."],
+      ["A deposit is the default for high risk", "In M2 we learned that some customers confirm by phone and then refuse anyway. A customer who has paid a deposit has a reason to pick up the parcel."],
+    ],
+  },
   milestones: {
     title: "Milestones",
     items: milestonesEn,
@@ -899,10 +952,12 @@ const en: Content = {
   },
   footer: {
     sources: "Sources",
-    note: "This page is our project log for Startup Engineering. The customer landing page is a separate thing.",
+    note: "This page is our project log for Startup Engineering. The customer landing page is separate, and the link is in Milestone 3.",
   },
 };
 
 export const content: Record<Lang, Content> = { ro, en };
 export const interviewFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLScRVm5ZNhzPai3UP39MYGBt1KAZNSUnT6lhV7I0SqpKuFXy6Q/viewform?usp=dialog";
+// TODO: pune aici link-ul public al landing page-ului (Netlify / Vercel).
+export const landingPageUrl = "";
 export { sources };
