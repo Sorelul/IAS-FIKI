@@ -7,6 +7,7 @@ import { LossCalculator } from "./LossCalculator";
 import { MilestonesSidebar } from "./MilestonesSidebar";
 import { Nav } from "./Nav";
 import { Scanner } from "./Scanner";
+import { Wireframes } from "./Wireframes";
 import { Heading, Section, ShieldLogo, tierColor } from "./ui";
 
 function Hero() {
@@ -524,6 +525,7 @@ export function Fiki({ interviews }: { interviews: InterviewStats | null }) {
           <Business />
           <Discovery />
           <Interviews stats={interviews} />
+          <Wireframes />
         </main>
         <Footer />
       </div>
