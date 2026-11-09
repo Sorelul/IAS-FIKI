@@ -170,7 +170,6 @@ const ro = {
     ["business", "Business"],
     ["discovery", "Discovery"],
     ["interviews", "Interviuri"],
-    ["wireframes", "Wireframes"],
   ] as [string, string][],
   hero: {
     badge: "Milestone 1: descrierea proiectului",
@@ -560,7 +559,6 @@ const en: Content = {
     ["business", "Business"],
     ["discovery", "Discovery"],
     ["interviews", "Interviews"],
-    ["wireframes", "Wireframes"],
   ],
   hero: {
     badge: "Milestone 1: project description",
@@ -959,5 +957,5 @@ const en: Content = {
 export const content: Record<Lang, Content> = { ro, en };
 export const interviewFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLScRVm5ZNhzPai3UP39MYGBt1KAZNSUnT6lhV7I0SqpKuFXy6Q/viewform?usp=dialog";
 // TODO: pune aici link-ul public al landing page-ului (Netlify / Vercel).
-export const landingPageUrl = "";
+export const landingPageUrl = "https://ornate-pithivier-ea3634.netlify.app";
 export { sources };
